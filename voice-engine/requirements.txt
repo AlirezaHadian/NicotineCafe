@@ -1,0 +1,13 @@
+# Nicotine Cafe — voice engine dependencies
+# Install with:  pip install -r requirements.txt
+
+faster-whisper>=1.0.0          # CPU-optimised Whisper (int8), Persian STT
+sounddevice>=0.4.6             # Microphone capture
+numpy>=1.24.0                  # Audio array ops
+keyboard>=0.13.5               # OPTIONAL — only needed for `main.py mic` (standalone CLI testing).
+                                # Production `serve` mode is controlled by the WPF app over TCP
+                                # and does NOT need this or Administrator rights.
+rapidfuzz>=3.6.0                # Fuzzy matching engine (brand/variant)
+
+# No internet needed after first model download (cached under
+# %USERPROFILE%\.cache\huggingface\hub). No GPU required.

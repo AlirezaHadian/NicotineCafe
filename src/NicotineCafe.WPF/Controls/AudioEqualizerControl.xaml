@@ -1,0 +1,34 @@
+<UserControl x:Class="NicotineCafe.WPF.Controls.AudioEqualizerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="Root">
+    <!--
+        Custom "ember bar" equalizer: 9 vertical bars with independent phase
+        offsets so idle motion looks alive (not a static flat line), driven
+        by the single Level value (0..1) coming from the mic via the engine.
+        Bars use the gold→ember gradient rather than a generic green VU look.
+    -->
+    <Grid>
+        <ItemsControl ItemsSource="{Binding BarHeights, ElementName=Root}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Width="6" Margin="3,0" CornerRadius="3" VerticalAlignment="Center"
+                            Height="{Binding}">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                                <GradientStop Color="#D4AF37" Offset="0" />
+                                <GradientStop Color="#E85D3D" Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>

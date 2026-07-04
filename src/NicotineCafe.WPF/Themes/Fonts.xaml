@@ -1,0 +1,12 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+      Fonts: Vazirmatn (Persian + Latin, open license, modern geometric look)
+      Place the .ttf files in Assets/Fonts/ — see README "Fonts" section.
+      Referencing by pack URI so both FA and EN render with the same family.
+    -->
+    <FontFamily x:Key="FontDisplay">pack://application:,,,/Assets/Fonts/#Vazirmatn</FontFamily>
+    <FontFamily x:Key="FontBody">pack://application:,,,/Assets/Fonts/#Vazirmatn</FontFamily>
+
+</ResourceDictionary>

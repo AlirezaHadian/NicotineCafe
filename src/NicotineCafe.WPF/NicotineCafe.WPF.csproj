@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <ApplicationIcon></ApplicationIcon>
+    <AssemblyName>NicotineCafe</AssemblyName>
+    <RootNamespace>NicotineCafe.WPF</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NicotineCafe.Core\NicotineCafe.Core.csproj" />
+    <ProjectReference Include="..\NicotineCafe.Data\NicotineCafe.Data.csproj" />
+    <ProjectReference Include="..\NicotineCafe.Services\NicotineCafe.Services.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Fonts\*.ttf" />
+    <Resource Include="Assets\Images\**\*.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Shared SQLite DB: copied to bin\...\Data\nicotinecafe.db -->
+    <None Include="..\..\database\nicotinecafe.db.sample" Link="Data\nicotinecafe.db"
+          CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\database\nicotinecafe.db.sample')" />
+    <!-- Voice engine: copied next to the WPF exe so VoiceEngineProcessLauncher can find main.py -->
+    <None Include="..\..\voice-engine\**\*.*" Link="voice-engine\%(RecursiveDir)%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest" Exclude="..\..\voice-engine\__pycache__\**" />
+  </ItemGroup>
+</Project>

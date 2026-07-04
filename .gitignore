@@ -1,0 +1,28 @@
+# .NET
+bin/
+obj/
+*.user
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Voice engine runtime artifacts
+voice-engine/recordings/
+voice-engine/results/
+
+# Whisper model cache (never commit — downloads automatically)
+.cache/
+
+# DB with real transaction/history data (keep schema.sql + seed.sql only)
+database/nicotinecafe.db
+!database/nicotinecafe.db.sample
+
+
+# Visual Studio
+.vs/
+bin/
+obj/
+*.user
+*.suo
