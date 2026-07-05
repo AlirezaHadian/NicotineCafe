@@ -46,4 +46,29 @@ public sealed class ProductService : IProductService
 
     /// <summary>Call after admin edits so next read reflects fresh data.</summary>
     public void InvalidateCache() => _cache = null;
+
+    public Task<IReadOnlyList<NamedOption>> GetBrandOptionsAsync(CancellationToken ct = default)
+        => _repository.GetBrandOptionsAsync(ct);
+
+    public Task<IReadOnlyList<NamedOption>> GetVariantOptionsAsync(CancellationToken ct = default)
+        => _repository.GetVariantOptionsAsync(ct);
+
+    public async Task<int> AddProductAsync(Product product, CancellationToken ct = default)
+    {
+        var id = await _repository.AddAsync(product, ct);
+        InvalidateCache();
+        return id;
+    }
+
+    public async Task UpdateProductAsync(Product product, CancellationToken ct = default)
+    {
+        await _repository.UpdateAsync(product, ct);
+        InvalidateCache();
+    }
+
+    public async Task DeleteProductAsync(int productId, CancellationToken ct = default)
+    {
+        await _repository.DeleteAsync(productId, ct);
+        InvalidateCache();
+    }
 }

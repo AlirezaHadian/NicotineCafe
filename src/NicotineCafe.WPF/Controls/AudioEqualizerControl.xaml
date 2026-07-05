@@ -3,32 +3,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Name="Root">
     <!--
-        Custom "ember bar" equalizer: 9 vertical bars with independent phase
-        offsets so idle motion looks alive (not a static flat line), driven
-        by the single Level value (0..1) coming from the mic via the engine.
-        Bars use the gold→ember gradient rather than a generic green VU look.
+        "Listening Orb" — concentric rings + glowing core, replaces any
+        push-to-talk button. Idles with a slow breathing motion; reacts to
+        live mic RMS (Level, 0..1) with an outward pulse. This is the ONLY
+        visual feedback the customer/operator needs — nothing to press.
     -->
-    <Grid>
-        <ItemsControl ItemsSource="{Binding BarHeights, ElementName=Root}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
-                                VerticalAlignment="Center" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Border Width="6" Margin="3,0" CornerRadius="3" VerticalAlignment="Center"
-                            Height="{Binding}">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                                <GradientStop Color="#D4AF37" Offset="0" />
-                                <GradientStop Color="#E85D3D" Offset="1" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+    <Grid Width="320" Height="320">
+        <Ellipse x:Name="Ring3" Width="320" Height="320" Stroke="{DynamicResource AccentGoldBrush}"
+                 StrokeThickness="1" Opacity="0.18" RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform><ScaleTransform x:Name="Ring3Scale" /></Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse x:Name="Ring2" Width="240" Height="240" Stroke="{DynamicResource AccentGoldBrush}"
+                 StrokeThickness="1.4" Opacity="0.32" RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform><ScaleTransform x:Name="Ring2Scale" /></Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse x:Name="Ring1" Width="170" Height="170" Stroke="{DynamicResource AccentGoldBrightBrush}"
+                 StrokeThickness="1.8" Opacity="0.5" RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform><ScaleTransform x:Name="Ring1Scale" /></Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse x:Name="Core" Width="108" Height="108" Fill="{DynamicResource OrbCoreGradientBrush}"
+                 RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform><ScaleTransform x:Name="CoreScale" /></Ellipse.RenderTransform>
+            <Ellipse.Effect>
+                <DropShadowEffect Color="#D9B25C" BlurRadius="60" ShadowDepth="0" Opacity="0.55" />
+            </Ellipse.Effect>
+        </Ellipse>
+        <TextBlock Text="🎙" FontSize="34" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   IsHitTestVisible="False" Opacity="0.85" />
     </Grid>
 </UserControl>

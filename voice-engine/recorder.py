@@ -10,6 +10,7 @@ Dependencies: sounddevice, keyboard, numpy
 from __future__ import annotations
 
 import queue
+import threading
 import time
 import wave
 from datetime import datetime
@@ -250,3 +251,137 @@ class ControlledRecorder:
     @property
     def is_recording(self) -> bool:
         return self._stream is not None
+
+
+class AutoVadRecorder:
+    """
+    Always-on microphone listener with a simple energy-based VAD state machine.
+    No start()/stop() commands needed from the UI — this runs continuously in
+    the background and calls `utterance_callback(audio: np.ndarray)` every
+    time it detects a complete spoken utterance (speech onset -> silence).
+
+    This replaces the push-to-talk ControlledRecorder for the default
+    "customer walks up and talks" retail flow: the operator/customer never
+    touches a button, the mic is always listening.
+
+    Tuning knobs (pass at construction time, defaults chosen from real
+    logged audio_level ranges: background noise ~0.02-0.04, speech ~0.1-0.9):
+      speech_threshold   : RMS level above which we consider "speech started"
+      silence_hangover_s : how much continuous quiet before we call it "done"
+      pre_roll_s         : audio kept from just BEFORE the threshold trip,
+                            so the first phoneme of the utterance isn't cut off
+      max_utterance_s    : hard cap so a long noise burst can't hang forever
+      min_utterance_s    : discard anything shorter (coughs, clicks, taps)
+    """
+
+    def __init__(
+        self,
+        config: RecorderConfig,
+        utterance_callback,
+        level_callback=None,
+        speech_threshold: float = 0.07,
+        silence_hangover_s: float = 0.55,  # was 0.7 — shorter tail = less dead-air sent to Whisper
+        pre_roll_s: float = 0.2,
+        max_utterance_s: float = 6.0,
+        min_utterance_s: float = 0.5,
+    ) -> None:
+        self.config = config
+        self._utterance_callback = utterance_callback
+        self._level_callback = level_callback
+        self._speech_threshold = speech_threshold
+        self._silence_hangover_s = silence_hangover_s
+        self._pre_roll_chunks = max(1, int(pre_roll_s / 0.02))  # ~20ms per chunk at typical blocksize
+        self._max_utterance_s = max_utterance_s
+        self._min_utterance_s = min_utterance_s
+
+        self._queue: queue.Queue[np.ndarray] = queue.Queue()
+        self._stream: Optional[sd.InputStream] = None
+        self._worker: Optional[threading.Thread] = None
+        self._running = False
+
+    def _sd_callback(self, indata: np.ndarray, frames: int, time_info, status) -> None:
+        if status:
+            print(f"  [AutoVadRecorder] Stream status: {status}", flush=True)
+        chunk = indata.copy()
+        self._queue.put(chunk)
+        if self._level_callback is not None:
+            rms = float(np.sqrt(np.mean(chunk.astype(np.float32) ** 2)))
+            self._level_callback(min(1.0, rms / 3000.0))
+
+    def _chunk_rms_norm(self, chunk: np.ndarray) -> float:
+        rms = float(np.sqrt(np.mean(chunk.astype(np.float32) ** 2)))
+        return min(1.0, rms / 3000.0)
+
+    def _worker_loop(self) -> None:
+        pre_roll: list[np.ndarray] = []
+        utterance: list[np.ndarray] = []
+        in_speech = False
+        silence_time = 0.0
+        speech_time = 0.0
+        chunk_duration = 0.0
+
+        while self._running:
+            try:
+                chunk = self._queue.get(timeout=0.5)
+            except queue.Empty:
+                continue
+
+            if chunk_duration == 0.0:
+                chunk_duration = len(chunk) / self.config.sample_rate
+
+            level = self._chunk_rms_norm(chunk)
+
+            if not in_speech:
+                pre_roll.append(chunk)
+                if len(pre_roll) > self._pre_roll_chunks:
+                    pre_roll.pop(0)
+                if level >= self._speech_threshold:
+                    in_speech = True
+                    utterance = list(pre_roll)
+                    speech_time = 0.0
+                    silence_time = 0.0
+                continue
+
+            # in_speech == True
+            utterance.append(chunk)
+            speech_time += chunk_duration
+            if level < self._speech_threshold:
+                silence_time += chunk_duration
+            else:
+                silence_time = 0.0
+
+            if silence_time >= self._silence_hangover_s or speech_time >= self._max_utterance_s:
+                audio = np.concatenate(utterance, axis=0).flatten() if utterance else None
+                in_speech = False
+                utterance = []
+                pre_roll = []
+                if audio is not None and (len(audio) / self.config.sample_rate) >= self._min_utterance_s:
+                    try:
+                        self._utterance_callback(audio)
+                    except Exception as ex:  # never let a bad utterance kill the listener
+                        print(f"  [AutoVadRecorder] utterance_callback error: {ex!r}", flush=True)
+
+    def start(self) -> None:
+        if self._running:
+            return
+        self._running = True
+        self._stream = sd.InputStream(
+            samplerate=self.config.sample_rate,
+            channels=self.config.channels,
+            dtype=self.config.dtype,
+            blocksize=int(self.config.sample_rate * 0.02),  # ~20ms chunks
+            callback=self._sd_callback,
+        )
+        self._stream.start()
+        self._worker = threading.Thread(target=self._worker_loop, daemon=True)
+        self._worker.start()
+
+    def stop(self) -> None:
+        self._running = False
+        if self._stream is not None:
+            self._stream.stop()
+            self._stream.close()
+            self._stream = None
+        if self._worker is not None:
+            self._worker.join(timeout=2)
+            self._worker = None

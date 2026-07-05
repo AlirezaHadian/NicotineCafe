@@ -17,21 +17,27 @@ INSERT INTO Brands (NameFa, NameEn) VALUES ('ایست', 'ESSE');                
 INSERT INTO Brands (NameFa, NameEn) VALUES ('گلوآز', 'Gauloises');          -- 8
 INSERT INTO Brands (NameFa, NameEn) VALUES ('پارلیامنت', 'Parliament');    -- 9
 INSERT INTO Brands (NameFa, NameEn) VALUES ('ال‌ام', 'L&M');               -- 10
+INSERT INTO Brands (NameFa, NameEn) VALUES ('دانهیل', 'Dunhill');          -- 11
+INSERT INTO Brands (NameFa, NameEn) VALUES ('کمل', 'Camel');               -- 12
+INSERT INTO Brands (NameFa, NameEn) VALUES ('لاکی استرایک', 'Lucky Strike'); -- 13
+INSERT INTO Brands (NameFa, NameEn) VALUES ('وست', 'West');                -- 14
+INSERT INTO Brands (NameFa, NameEn) VALUES ('پال مال', 'Pall Mall');       -- 15
+INSERT INTO Brands (NameFa, NameEn) VALUES ('روتمنس', 'Rothmans');         -- 16
 
 INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (1,'ونستون'), (1,'وینسون'), (1,'وینستون'), (1,'وین استون'), (1,'وینستن');
+ (1,'ونستون'), (1,'وینسون'), (1,'وینستون'), (1,'وین استون'), (1,'وینستن'), (1,'بینستون'), (1,'وینستو'), (1,'وینستوم');
 
 INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (2,'مارلبرو'), (2,'مارلبورو'), (2,'مارلبرا'), (2,'ماربرو'), (2,'مارالبرو'), (2,'مارلبورا');
+ (2,'مارلبرو'), (2,'مارلبورو'), (2,'مارلبرا'), (2,'ماربرو'), (2,'مارالبرو'), (2,'مارلبورا'), (2,'ماربو'), (2,'ماربر'), (2,'مالبرو'), (2,'مارورو'), (2,'مارور');
 
 INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (3,'بهمن'), (3,'به من'), (3,'بحمن');
+ (3,'بهمن'), (3,'به من'), (3,'بحمن'), (3,'باهمان'), (3,'با همان'), (3,'بامن');
 
 INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (4,'کنت'), (4,'کنّت'), (4,'کِنت'), (4,'کنت سیگار');
+ (4,'کنت'), (4,'کنّت'), (4,'کِنت'), (4,'کنت سیگار'), (4,'کند'), (4,'کنط');
 
 INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (5,'کاپیتان بلک'), (5,'کاپیتان'), (5,'کاپیتن بلک'), (5,'کاپیتن'), (5,'کپیتان بلک');
+ (5,'کاپیتان بلک'), (5,'کاپیتان'), (5,'کاپیتن بلک'), (5,'کاپیتن'), (5,'کپیتان بلک'), (5,'کبیتان بلک'), (5,'کاپیتان بلاک');
 
 INSERT INTO BrandAliases (BrandId, Alias) VALUES
  (6,'باند استریت'), (6,'باند'), (6,'بوند'), (6,'بوند استریت'), (6,'باند استریت آبی');
@@ -43,10 +49,28 @@ INSERT INTO BrandAliases (BrandId, Alias) VALUES
  (8,'گلوآز'), (8,'گولوآز'), (8,'گلواز'), (8,'گیتان');
 
 INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (9,'پارلیامنت'), (9,'پارلمان'), (9,'پارلیمنت');
+ (9,'پارلیامنت'), (9,'پارلمان'), (9,'پارلیمنت'), (9,'پارلیامت'), (9,'پرلمان');
 
 INSERT INTO BrandAliases (BrandId, Alias) VALUES
  (10,'ال ام'), (10,'ال‌ام'), (10,'ال اند ام'), (10,'الاند ام'), (10,'الام'), (10,'ال ام سیگار');
+
+INSERT INTO BrandAliases (BrandId, Alias) VALUES
+ (11,'دانهیل'), (11,'دان هیل'), (11,'دنهیل');
+
+INSERT INTO BrandAliases (BrandId, Alias) VALUES
+ (12,'کمل'), (12,'کمال'), (12,'شتر'), (12,'کمبل'), (12,'کاملیا');
+
+INSERT INTO BrandAliases (BrandId, Alias) VALUES
+ (13,'لاکی استرایک'), (13,'لاکی'), (13,'لاکی استریک'), (13,'لوکی استرایک');
+
+INSERT INTO BrandAliases (BrandId, Alias) VALUES
+ (14,'وست'), (14,'وست سیگار');
+
+INSERT INTO BrandAliases (BrandId, Alias) VALUES
+ (15,'پال مال'), (15,'پالمال'), (15,'پال مالو');
+
+INSERT INTO BrandAliases (BrandId, Alias) VALUES
+ (16,'روتمنس'), (16,'روتمن'), (16,'راتمنس');
 
 -- ---------- Variants ----------
 INSERT INTO Variants (NameFa, NameEn) VALUES ('آبی', 'Blue');        -- 1
@@ -133,3 +157,67 @@ INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, Nico
 VALUES (10,2,'ال‌ام قرمز','L&M Red','Images/lm_red.png', 10, 0.8, 10, 20);
 INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
 VALUES (10,1,'ال‌ام آبی','L&M Blue','Images/lm_blue.png', 8, 0.6, 8, 20);
+
+-- Dunhill
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (11,4,'دانهیل نقره‌ای','Dunhill Silver','Images/dunhill_silver.png', 6, 0.5, 6, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (11,2,'دانهیل قرمز','Dunhill Red','Images/dunhill_red.png', 10, 0.8, 10, 20);
+
+-- Camel
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (12,6,'کمل سفید (لایت)','Camel White','Images/camel_white.png', 6, 0.5, 6, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (12,2,'کمل قرمز','Camel Red','Images/camel_red.png', 11, 0.9, 11, 20);
+
+-- Lucky Strike
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (13,2,'لاکی استرایک قرمز','Lucky Strike Red','Images/lucky_red.png', 10, 0.8, 10, 20);
+
+-- West
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (14,1,'وست آبی','West Blue','Images/west_blue.png', 8, 0.6, 8, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (14,2,'وست قرمز','West Red','Images/west_red.png', 10, 0.8, 10, 20);
+
+-- Pall Mall
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (15,2,'پال مال قرمز','Pall Mall Red','Images/pallmall_red.png', 10, 0.8, 10, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (15,1,'پال مال آبی','Pall Mall Blue','Images/pallmall_blue.png', 8, 0.6, 8, 20);
+
+-- Rothmans
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (16,1,'روتمنس آبی','Rothmans Blue','Images/rothmans_blue.png', 8, 0.6, 8, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (16,4,'روتمنس نقره‌ای','Rothmans Silver','Images/rothmans_silver.png', 5, 0.4, 5, 20);
+
+-- ---------- Additional variants for existing brands (deeper catalog) ----------
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (1,5,'وینستون منتول','Winston Menthol','Images/winston_menthol.png', 6, 0.5, 6, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (2,7,'مارلبرو مشکی (بلک منتول)','Marlboro Black Menthol','Images/marlboro_black.png', 9, 0.7, 9, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (4,5,'کنت منتول','Kent Menthol','Images/kent_menthol.png', 6, 0.5, 6, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (4,8,'کنت اولترالایت','Kent Ultra Light','Images/kent_ultralight.png', 3, 0.3, 4, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (5,5,'کاپیتان بلک چری (منتول میوه‌ای)','Captain Black Cherry','Images/captainblack_cherry.png', 10, 0.8, 10, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (10,4,'ال‌ام نقره‌ای','L&M Silver','Images/lm_silver.png', 5, 0.4, 5, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (11,1,'دانهیل آبی','Dunhill Blue','Images/dunhill_blue.png', 8, 0.6, 8, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (12,1,'کمل آبی','Camel Blue','Images/camel_blue.png', 8, 0.6, 8, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (12,5,'کمل منتول','Camel Menthol','Images/camel_menthol.png', 6, 0.5, 6, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (14,4,'وست نقره‌ای','West Silver','Images/west_silver.png', 5, 0.4, 5, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (15,5,'پال مال منتول','Pall Mall Menthol','Images/pallmall_menthol.png', 6, 0.5, 6, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (16,2,'روتمنس قرمز','Rothmans Red','Images/rothmans_red.png', 10, 0.8, 10, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (9,5,'پارلیامنت منتول','Parliament Menthol','Images/parliament_menthol.png', 6, 0.5, 6, 20);
+INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
+VALUES (7,1,'ایست آبی','ESSE Blue','Images/esse_blue.png', 5, 0.4, 5, 20);

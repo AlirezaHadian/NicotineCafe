@@ -15,7 +15,9 @@ ALL_MODEL_SIZES: list[ModelSize] = ["tiny", "base", "small"]
 @dataclass
 class WhisperConfig:
     """Settings passed directly to faster-whisper."""
-    model_size: ModelSize = "base"
+    model_size: ModelSize = "tiny"   # tiny = ~3-5x faster than base on CPU; small accuracy drop.
+                                      # If accuracy matters more than speed on capable hardware,
+                                      # override with --model base or --model small.
     language: str = "fa"
     beam_size: int = 1     # 1 = greedy decoding, much faster; raise to 5 for max accuracy if speed allows
     best_of: int = 1       # only affects temperature>0 sampling — unused while temperature=0.0
@@ -62,7 +64,8 @@ class MatcherConfig:
     # Variant words (آبی، گلد) are common Persian words → need higher bar
     # to avoid matching filler verbs like داری، بده against دبل، گلد
     variant_fuzzy_threshold: float = 82.0
-    min_confidence: float = 0.48
+    min_confidence: float = 0.60  # raised from 0.48 — filters out low-confidence noise matches
+                                   # (garbled/unrelated speech incorrectly mapped to a brand)
 
 
 @dataclass

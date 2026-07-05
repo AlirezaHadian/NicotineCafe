@@ -6,6 +6,8 @@
         <ResourceDictionary>
             <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+            <conv:ConnectionDotConverter x:Key="ConnectionDotConverter" />
+            <conv:ConnectionTextConverter x:Key="ConnectionTextConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/Fonts.xaml" />
                 <ResourceDictionary Source="Themes/Colors.xaml" />

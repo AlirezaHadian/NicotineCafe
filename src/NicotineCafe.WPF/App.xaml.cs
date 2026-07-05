@@ -38,6 +38,8 @@ public partial class App : Application
         // --- ViewModels / Windows ---
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MainWindow>();
+        services.AddTransient<ViewModels.AdminViewModel>();
+        services.AddTransient<Views.AdminWindow>();
 
         Services = services.BuildServiceProvider();
 

@@ -178,7 +178,7 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("--model", choices=ALL_MODEL_SIZES, default="base",
+    parser.add_argument("--model", choices=ALL_MODEL_SIZES, default="tiny",
                         help="Whisper model size (default: base)")
     parser.add_argument("--debug", action="store_true")
 

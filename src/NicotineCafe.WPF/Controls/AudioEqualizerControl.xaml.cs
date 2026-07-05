@@ -1,26 +1,24 @@
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 namespace NicotineCafe.WPF.Controls;
 
 /// <summary>
-/// 9-bar reactive equalizer. Bound to a 0..1 "Level" value pushed by the
-/// speech engine (mic RMS). Each bar has a phase offset so the idle
-/// animation looks organic instead of flat.
+/// "Listening orb": idle breathing animation + reactive pulse driven by the
+/// live mic level (0..1) streamed from the always-on VAD recorder. No
+/// interaction — purely a passive "I'm listening" indicator, since there's
+/// no button to press anymore.
 /// </summary>
 public partial class AudioEqualizerControl : UserControl
 {
-    private const int BarCount = 9;
-    private readonly DispatcherTimer _idleTimer;
-    private readonly double[] _phase = new double[BarCount];
-    private readonly Random _rng = new();
+    private readonly DispatcherTimer _timer;
+    private double _phase;
+    private double _smoothedLevel;
 
     public static readonly DependencyProperty LevelProperty =
         DependencyProperty.Register(nameof(Level), typeof(double), typeof(AudioEqualizerControl),
-            new PropertyMetadata(0.0, OnLevelChanged));
+            new PropertyMetadata(0.0));
 
     public double Level
     {
@@ -28,34 +26,30 @@ public partial class AudioEqualizerControl : UserControl
         set => SetValue(LevelProperty, value);
     }
 
-    public ObservableCollection<double> BarHeights { get; } = new();
-
     public AudioEqualizerControl()
     {
         InitializeComponent();
-        for (int i = 0; i < BarCount; i++)
-        {
-            BarHeights.Add(6);
-            _phase[i] = _rng.NextDouble() * Math.PI * 2;
-        }
-
-        _idleTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(80) };
-        _idleTimer.Tick += (_, _) => Animate();
-        _idleTimer.Start();
+        _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
+        _timer.Tick += (_, _) => Animate();
+        _timer.Start();
     }
-
-    private static void OnLevelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) { }
 
     private void Animate()
     {
-        double baseLevel = Math.Clamp(Level, 0.0, 1.0);
-        for (int i = 0; i < BarCount; i++)
-        {
-            _phase[i] += 0.35 + baseLevel * 0.6;
-            // Idle: gentle sine breathing. Active: level dominates with per-bar jitter.
-            double idle = (Math.Sin(_phase[i]) + 1) / 2.0;      // 0..1
-            double target = 6 + (idle * 6) + (baseLevel * 34 * (0.6 + _rng.NextDouble() * 0.4));
-            BarHeights[i] = Math.Clamp(target, 6, 40);
-        }
+        _phase += 0.045;
+        double idle = (Math.Sin(_phase) + 1) / 2.0; // 0..1 slow breathing
+
+        double target = Math.Clamp(Level, 0.0, 1.0);
+        _smoothedLevel += (target - _smoothedLevel) * 0.25; // ease toward target
+
+        double core = 0.92 + idle * 0.06 + _smoothedLevel * 0.28;
+        double r1 = 0.95 + idle * 0.04 + _smoothedLevel * 0.22;
+        double r2 = 0.97 + idle * 0.03 + _smoothedLevel * 0.16;
+        double r3 = 0.98 + idle * 0.02 + _smoothedLevel * 0.10;
+
+        CoreScale.ScaleX = CoreScale.ScaleY = core;
+        Ring1Scale.ScaleX = Ring1Scale.ScaleY = r1;
+        Ring2Scale.ScaleX = Ring2Scale.ScaleY = r2;
+        Ring3Scale.ScaleX = Ring3Scale.ScaleY = r3;
     }
 }

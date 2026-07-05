@@ -87,6 +87,22 @@ public sealed class SqliteProductRepository : IProductRepository
         await conn.ExecuteAsync("UPDATE Products SET IsActive = 0 WHERE Id = @id", new { id });
     }
 
+    public async Task<IReadOnlyList<NamedOption>> GetBrandOptionsAsync(CancellationToken ct = default)
+    {
+        using var conn = _factory.Create();
+        var rows = await conn.QueryAsync<NamedOption>(
+            "SELECT Id, NameFa FROM Brands WHERE IsActive = 1 ORDER BY NameFa");
+        return rows.ToList();
+    }
+
+    public async Task<IReadOnlyList<NamedOption>> GetVariantOptionsAsync(CancellationToken ct = default)
+    {
+        using var conn = _factory.Create();
+        var rows = await conn.QueryAsync<NamedOption>(
+            "SELECT Id, NameFa FROM Variants WHERE IsActive = 1 ORDER BY NameFa");
+        return rows.ToList();
+    }
+
     public async Task LogRecognitionAsync(RecognitionLogEntry entry, CancellationToken ct = default)
     {
         using var conn = _factory.Create();

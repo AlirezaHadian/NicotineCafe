@@ -1,0 +1,111 @@
+<Window x:Class="NicotineCafe.WPF.Views.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="مدیریت محصولات — نیکوتین کافه" Width="1180" Height="760"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource BgGradientBrush}"
+        FlowDirection="RightToLeft" FontFamily="{DynamicResource FontBody}">
+
+    <Grid Margin="28">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="1.1*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Product list -->
+        <DockPanel Grid.Column="0">
+            <TextBlock DockPanel.Dock="Top" Text="لیست محصولات" Style="{StaticResource BrandLogoStyle}"
+                       FontSize="20" Margin="0,0,0,14" />
+            <DataGrid ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}"
+                      AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                      Background="#12141B" Foreground="{DynamicResource TextPrimaryBrush}"
+                      RowBackground="#12141B" AlternatingRowBackground="#161923"
+                      BorderBrush="{DynamicResource BorderBrush2}" BorderThickness="1"
+                      GridLinesVisibility="None" HeadersVisibility="Column">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="برند" Binding="{Binding BrandNameFa}" Width="120" />
+                    <DataGridTextColumn Header="تنوع" Binding="{Binding VariantNameFa}" Width="100" />
+                    <DataGridTextColumn Header="نام فارسی" Binding="{Binding NameFa}" Width="*" />
+                    <DataGridTextColumn Header="نام انگلیسی" Binding="{Binding NameEn}" Width="*" />
+                    <DataGridTextColumn Header="قطران" Binding="{Binding TarMg}" Width="70" />
+                    <DataGridTextColumn Header="نیکوتین" Binding="{Binding NicotineMg}" Width="70" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+
+        <!-- Add/Edit form -->
+        <Border Grid.Column="2" Background="{DynamicResource PanelGradientBrush}" CornerRadius="18"
+                BorderBrush="{DynamicResource BorderBrush2}" BorderThickness="1" Padding="24">
+            <StackPanel>
+                <TextBlock Text="افزودن / ویرایش محصول" Style="{StaticResource BrandLogoStyle}" FontSize="18" Margin="0,0,0,18" />
+
+                <TextBlock Text="برند" Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" />
+                <ComboBox ItemsSource="{Binding Brands}" SelectedItem="{Binding FormBrand}"
+                          DisplayMemberPath="NameFa" Margin="0,0,0,12" />
+
+                <TextBlock Text="تنوع (اختیاری)" Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" />
+                <ComboBox ItemsSource="{Binding Variants}" SelectedItem="{Binding FormVariant}"
+                          DisplayMemberPath="NameFa" Margin="0,0,0,12" />
+
+                <TextBlock Text="نام فارسی" Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" />
+                <TextBox Text="{Binding FormNameFa, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,12" />
+
+                <TextBlock Text="نام انگلیسی" Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" />
+                <TextBox Text="{Binding FormNameEn}" FlowDirection="LeftToRight" Margin="0,0,0,12" />
+
+                <TextBlock Text="مسیر عکس (نسبی، داخل Assets/Images)" Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" />
+                <TextBox Text="{Binding FormImagePath}" FlowDirection="LeftToRight" Margin="0,0,0,12" />
+
+                <Grid Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="قطران (mg)" Style="{StaticResource SpecLabelStyle}" />
+                        <TextBox Text="{Binding FormTarMg}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="نیکوتین (mg)" Style="{StaticResource SpecLabelStyle}" />
+                        <TextBox Text="{Binding FormNicotineMg}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="4">
+                        <TextBlock Text="CO (mg)" Style="{StaticResource SpecLabelStyle}" />
+                        <TextBox Text="{Binding FormCarbonMonoxideMg}" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="تعداد در پاکت" Style="{StaticResource SpecLabelStyle}" />
+                        <TextBox Text="{Binding FormPackSize}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="قیمت (تومان)" Style="{StaticResource SpecLabelStyle}" />
+                        <TextBox Text="{Binding FormPrice}" />
+                    </StackPanel>
+                </Grid>
+
+                <Button Content="افزودن به‌عنوان محصول جدید" Command="{Binding SaveNewCommand}"
+                        Padding="0,10" Margin="0,0,0,8" />
+                <Button Content="ذخیره تغییرات روی محصول انتخاب‌شده" Command="{Binding SaveChangesCommand}"
+                        Padding="0,10" Margin="0,0,0,8" />
+                <Button Content="حذف محصول انتخاب‌شده" Command="{Binding DeleteSelectedCommand}"
+                        Padding="0,10" Margin="0,0,0,8" Background="{DynamicResource AccentEmberBrush}" />
+                <Button Content="پاک‌کردن فرم" Command="{Binding ClearFormCommand}" Padding="0,10" />
+
+                <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource AccentGoldBrightBrush}"
+                           Margin="0,16,0,0" TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

@@ -17,5 +17,8 @@ public interface IProductRepository
     Task UpdateAsync(Product product, CancellationToken ct = default);
     Task DeleteAsync(int id, CancellationToken ct = default);
 
+    Task<IReadOnlyList<NamedOption>> GetBrandOptionsAsync(CancellationToken ct = default);
+    Task<IReadOnlyList<NamedOption>> GetVariantOptionsAsync(CancellationToken ct = default);
+
     Task LogRecognitionAsync(RecognitionLogEntry entry, CancellationToken ct = default);
 }

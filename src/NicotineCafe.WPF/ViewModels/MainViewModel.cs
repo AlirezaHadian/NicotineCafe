@@ -8,9 +8,11 @@ namespace NicotineCafe.WPF.ViewModels;
 
 /// <summary>
 /// Drives the single-product display screen:
-///  - listens to the speech engine for recognitions
+///  - listens to the (always-on, VAD-driven) speech engine for recognitions
 ///  - shows a product for up to 5 minutes
 ///  - hides early on: (a) a new product being recognised, (b) operator clicking the X
+/// No button, no push-to-talk — the engine listens continuously and pushes
+/// a recognition the instant a customer finishes speaking.
 /// </summary>
 public partial class MainViewModel : ObservableObject
 {
@@ -22,12 +24,8 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty] private Product? _currentProduct;
     [ObservableProperty] private bool _isProductVisible;
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(StartRecordingCommand))]
-    [NotifyCanExecuteChangedFor(nameof(StopRecordingCommand))]
-    private bool _isEngineConnected;
-    [ObservableProperty] private double _audioLevel; // 0.0–1.0, bound to the equalizer control
-    [ObservableProperty] private bool _isRecording;
+    [ObservableProperty] private bool _isEngineConnected;
+    [ObservableProperty] private double _audioLevel; // 0.0–1.0, bound to the equalizer/orb visual
     [ObservableProperty] private string _statusText = "در حال اتصال به موتور تشخیص...";
 
     public MainViewModel(IProductService productService, ISpeechEngineClient speechClient)
@@ -43,30 +41,11 @@ public partial class MainViewModel : ObservableObject
         _speechClient.ConnectionStateChanged += (_, connected) =>
         {
             IsEngineConnected = connected;
-            if (!connected)
-                StatusText = "در حال اتصال به موتور تشخیص...";
+            StatusText = connected ? "در انتظار مشتری..." : "در حال اتصال به موتور تشخیص...";
         };
 
         _ = _speechClient.ConnectAsync();
     }
-
-    [RelayCommand(CanExecute = nameof(CanRecord))]
-    private async Task StartRecordingAsync()
-    {
-        IsRecording = true;
-        StatusText = "در حال شنیدن...";
-        await _speechClient.SendCommandAsync("start_recording");
-    }
-
-    [RelayCommand(CanExecute = nameof(CanRecord))]
-    private async Task StopRecordingAsync()
-    {
-        IsRecording = false;
-        StatusText = "در حال پردازش...";
-        await _speechClient.SendCommandAsync("stop_recording");
-    }
-
-    private bool CanRecord() => IsEngineConnected;
 
     private async void OnProductRecognized(object? sender, Core.DTOs.RecognizedProductMessage msg)
     {
@@ -74,11 +53,9 @@ public partial class MainViewModel : ObservableObject
         {
             StatusText = msg.Message switch
             {
-                "engine_ready" => "برای صحبت، دکمه میکروفون را نگه دارید",
-                "recording_started" => "در حال شنیدن...",
-                "no_speech_detected" => "صدا واضح نبود — دوباره امتحان کنید",
-                "recording_too_short" => "ضبط خیلی کوتاه بود — دوباره امتحان کنید",
-                "no_audio_captured" => "صدایی دریافت نشد",
+                "engine_ready" => "در انتظار مشتری...",
+                "processing" => "در حال پردازش...",
+                "no_speech_detected" => "متوجه نشدم — دوباره بفرمایید",
                 _ => StatusText,
             };
             return;
@@ -86,7 +63,7 @@ public partial class MainViewModel : ObservableObject
 
         if (!msg.IsValid || msg.ProductId is null)
         {
-            StatusText = "محصول شناسایی نشد — دوباره امتحان کنید";
+            StatusText = "محصول شناسایی نشد — دوباره بفرمایید";
             return;
         }
 
@@ -102,7 +79,6 @@ public partial class MainViewModel : ObservableObject
     {
         CurrentProduct = product;
         IsProductVisible = true;
-        StatusText = string.Empty;
 
         _hideTimer.Stop();
         _hideTimer.Start();
@@ -116,6 +92,6 @@ public partial class MainViewModel : ObservableObject
         _hideTimer.Stop();
         IsProductVisible = false;
         CurrentProduct = null;
-        StatusText = "در انتظار گفتار...";
+        StatusText = "در انتظار مشتری...";
     }
 }
