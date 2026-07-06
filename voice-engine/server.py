@@ -67,6 +67,7 @@ class VoiceEngineServer:
 
         self._conn: socket.socket | None = None
         self._conn_lock = threading.Lock()
+        self._process_lock = threading.Lock()  # serializes Whisper calls; VAD tracking is unaffected
 
     # ------------------------------------------------------------------
     # Outbound messages
@@ -104,6 +105,21 @@ class VoiceEngineServer:
     def _send_status(self, message: str) -> None:
         self._send({"type": "status", "message": message})
 
+    def _dispatch_client_message(self, line: str) -> None:
+        try:
+            msg = json.loads(line)
+        except json.JSONDecodeError:
+            return
+        msg_type = msg.get("type")
+        if msg_type == "pause":
+            self.recorder.pause()
+            log("[VoiceEngineServer] listening PAUSED by operator")
+            self._send_status("paused")
+        elif msg_type == "resume":
+            self.recorder.resume()
+            log("[VoiceEngineServer] listening RESUMED by operator")
+            self._send_status("resumed")
+
     # ------------------------------------------------------------------
     # Called automatically by AutoVadRecorder whenever it captures a
     # complete utterance (speech onset -> silence). No commands from
@@ -111,6 +127,10 @@ class VoiceEngineServer:
     # ------------------------------------------------------------------
 
     def _on_utterance(self, audio) -> None:
+        with self._process_lock:
+            self._process_utterance(audio)
+
+    def _process_utterance(self, audio) -> None:
         t_start = time.perf_counter()
         self._send_status("processing")
 
@@ -167,8 +187,16 @@ class VoiceEngineServer:
                 self._send_status("engine_ready")
 
                 try:
-                    while conn.recv(1):
-                        pass  # no commands expected anymore; just detect disconnect
+                    buf = b""
+                    while True:
+                        chunk = conn.recv(4096)
+                        if not chunk:
+                            break
+                        buf += chunk
+                        while b"\n" in buf:
+                            line, buf = buf.split(b"\n", 1)
+                            if line.strip():
+                                self._dispatch_client_message(line.decode("utf-8", errors="ignore"))
                 except OSError:
                     pass
 

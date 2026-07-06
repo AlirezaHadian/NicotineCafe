@@ -23,6 +23,29 @@
                       RowBackground="#12141B" AlternatingRowBackground="#161923"
                       BorderBrush="{DynamicResource BorderBrush2}" BorderThickness="1"
                       GridLinesVisibility="None" HeadersVisibility="Column">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#1E2230" />
+                        <Setter Property="Foreground" Value="{DynamicResource AccentGoldBrightBrush}" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="Padding" Value="10,10" />
+                        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush2}" />
+                        <Setter Property="BorderThickness" Value="0,0,1,1" />
+                    </Style>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Padding" Value="10,6" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#2A2F3D" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style TargetType="DataGridRowHeader">
+                        <Setter Property="Background" Value="#12141B" />
+                    </Style>
+                </DataGrid.Resources>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="برند" Binding="{Binding BrandNameFa}" Width="120" />
                     <DataGridTextColumn Header="تنوع" Binding="{Binding VariantNameFa}" Width="100" />

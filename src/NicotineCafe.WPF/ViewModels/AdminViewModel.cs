@@ -49,17 +49,41 @@ public partial class AdminViewModel : ObservableObject
 
     private async Task LoadAsync()
     {
-        Products.Clear();
-        foreach (var p in await _productService.GetCatalogAsync())
-            Products.Add(p);
+        try
+        {
+            Products.Clear();
+            foreach (var p in await _productService.GetCatalogAsync())
+                Products.Add(p);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"خطا در بارگذاری محصولات: {ex.Message}";
+        }
 
-        Brands.Clear();
-        foreach (var b in await _productService.GetBrandOptionsAsync())
-            Brands.Add(b);
+        try
+        {
+            Brands.Clear();
+            var brands = await _productService.GetBrandOptionsAsync();
+            foreach (var b in brands)
+                Brands.Add(b);
+            if (Brands.Count == 0)
+                StatusMessage = "هیچ برندی توی دیتابیس پیدا نشد — ابتدا باید حداقل یک برند (Brands) اضافه کنی.";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"خطا در بارگذاری برندها: {ex.Message}";
+        }
 
-        Variants.Clear();
-        foreach (var v in await _productService.GetVariantOptionsAsync())
-            Variants.Add(v);
+        try
+        {
+            Variants.Clear();
+            foreach (var v in await _productService.GetVariantOptionsAsync())
+                Variants.Add(v);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"خطا در بارگذاری تنوع‌ها: {ex.Message}";
+        }
     }
 
     partial void OnSelectedProductChanged(Product? value)

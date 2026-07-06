@@ -18,4 +18,14 @@ public partial class MainWindow : Window
         admin.Owner = this;
         admin.ShowDialog();
     }
+
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Application.Current.Shutdown();
+    }
 }

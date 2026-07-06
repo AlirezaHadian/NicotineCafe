@@ -171,7 +171,30 @@ class WhisperEngine:
             vad_filter=self.config.vad_filter,
             vad_parameters=dict(min_silence_duration_ms=self.config.vad_min_silence_ms),
         )
-        raw_segments = list(segments_gen)
+
+        # Iterate manually instead of list(segments_gen): a hallucination loop
+        # shows up as the SAME short segment text repeating over and over.
+        # Bail out the instant we see that pattern (or a hard time budget is
+        # exceeded) instead of waiting for the model to generate hundreds of
+        # repeated tokens before we're allowed to discard them — this is what
+        # made hallucinating calls take 4-9s instead of ~2s.
+        raw_segments = []
+        last_text: Optional[str] = None
+        repeat_run = 0
+        deadline = t0 + 3.5  # hard cap regardless of what's happening
+        for seg in segments_gen:
+            raw_segments.append(seg)
+            seg_text = seg.text.strip()
+            if seg_text and seg_text == last_text:
+                repeat_run += 1
+                if repeat_run >= 2:  # same short phrase 3x in a row = looping
+                    break
+            else:
+                repeat_run = 0
+            last_text = seg_text
+            if time.perf_counter() > deadline:
+                break
+
         inference_time = time.perf_counter() - t0
 
         text = " ".join(seg.text.strip() for seg in raw_segments).strip()

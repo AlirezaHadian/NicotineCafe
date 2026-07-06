@@ -279,11 +279,11 @@ class AutoVadRecorder:
         config: RecorderConfig,
         utterance_callback,
         level_callback=None,
-        speech_threshold: float = 0.07,
-        silence_hangover_s: float = 0.55,  # was 0.7 — shorter tail = less dead-air sent to Whisper
+        speech_threshold: float = 0.09,     # was 0.07 — fewer false triggers on background noise
+        silence_hangover_s: float = 0.55,
         pre_roll_s: float = 0.2,
         max_utterance_s: float = 6.0,
-        min_utterance_s: float = 0.5,
+        min_utterance_s: float = 0.9,       # was 0.5 — short blips (taps/breath) never reach Whisper now
     ) -> None:
         self.config = config
         self._utterance_callback = utterance_callback
@@ -298,6 +298,18 @@ class AutoVadRecorder:
         self._stream: Optional[sd.InputStream] = None
         self._worker: Optional[threading.Thread] = None
         self._running = False
+        self._paused = False
+
+    def pause(self) -> None:
+        """Stop reacting to speech, but keep the mic stream open so resume() is instant."""
+        self._paused = True
+
+    def resume(self) -> None:
+        self._paused = False
+
+    @property
+    def is_paused(self) -> bool:
+        return self._paused
 
     def _sd_callback(self, indata: np.ndarray, frames: int, time_info, status) -> None:
         if status:
@@ -329,6 +341,15 @@ class AutoVadRecorder:
             if chunk_duration == 0.0:
                 chunk_duration = len(chunk) / self.config.sample_rate
 
+            if self._paused:
+                # Drop everything while paused — don't track onset/offset,
+                # don't buffer, don't call back. Stream stays open so
+                # resume() is instant (no re-opening the mic device).
+                in_speech = False
+                utterance = []
+                pre_roll = []
+                continue
+
             level = self._chunk_rms_norm(chunk)
 
             if not in_speech:
@@ -356,10 +377,19 @@ class AutoVadRecorder:
                 utterance = []
                 pre_roll = []
                 if audio is not None and (len(audio) / self.config.sample_rate) >= self._min_utterance_s:
-                    try:
-                        self._utterance_callback(audio)
-                    except Exception as ex:  # never let a bad utterance kill the listener
-                        print(f"  [AutoVadRecorder] utterance_callback error: {ex!r}", flush=True)
+                    # Run the (potentially slow, especially on hallucination
+                    # loops) callback in its own thread so THIS worker loop
+                    # keeps tracking real-time speech onset/offset instead of
+                    # falling behind and merging unrelated utterances together.
+                    threading.Thread(
+                        target=self._safe_invoke_callback, args=(audio,), daemon=True
+                    ).start()
+
+    def _safe_invoke_callback(self, audio: np.ndarray) -> None:
+        try:
+            self._utterance_callback(audio)
+        except Exception as ex:  # never let a bad utterance kill the listener
+            print(f"  [AutoVadRecorder] utterance_callback error: {ex!r}", flush=True)
 
     def start(self) -> None:
         if self._running:

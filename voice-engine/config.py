@@ -33,7 +33,9 @@ class WhisperConfig:
     # VAD disabled: our own hallucination detector is sufficient,
     # and faster-whisper's VAD is too aggressive for short brand names
     # like کنت / کمل said in isolation.
-    vad_filter: bool = False
+    vad_filter: bool = True   # let faster-whisper's internal Silero VAD reject
+                              # non-speech audio fast, instead of hallucinating
+                              # through it for several seconds before we catch it
     vad_min_silence_ms: int = 300
 
     initial_prompt: str = (
@@ -60,7 +62,7 @@ class MatcherConfig:
     brand_weight: float = 0.70
     variant_weight: float = 0.30
     # Brand names (وینستون، مارلبرو) are distinctive → lower threshold OK
-    fuzzy_threshold: float = 70.0
+    fuzzy_threshold: float = 76.0
     # Variant words (آبی، گلد) are common Persian words → need higher bar
     # to avoid matching filler verbs like داری، بده against دبل، گلد
     variant_fuzzy_threshold: float = 82.0

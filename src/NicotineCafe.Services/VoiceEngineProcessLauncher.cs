@@ -21,6 +21,7 @@ public sealed class VoiceEngineProcessLauncher : IDisposable
     private readonly int _port;
     private readonly string? _modelPath;
     private readonly string _logPath;
+    private bool _intentionalStop;
 
     public event EventHandler<string>? StartupFailed;
 
@@ -37,6 +38,7 @@ public sealed class VoiceEngineProcessLauncher : IDisposable
     public void Start()
     {
         if (_process is { HasExited: false }) return;
+        _intentionalStop = false;
 
         if (IsSomethingAlreadyListening())
         {
@@ -94,6 +96,7 @@ public sealed class VoiceEngineProcessLauncher : IDisposable
 
             _process.Exited += (_, _) =>
             {
+                if (_intentionalStop) return; // normal shutdown, not a crash — nothing to report
                 if (_process.ExitCode != 0)
                     Report($"voice-engine process exited early with code {_process.ExitCode}. See voice-engine.log for details.");
             };
@@ -136,6 +139,7 @@ public sealed class VoiceEngineProcessLauncher : IDisposable
 
     public void Stop()
     {
+        _intentionalStop = true;
         if (_process is { HasExited: false })
         {
             _process.Kill(entireProcessTree: true);

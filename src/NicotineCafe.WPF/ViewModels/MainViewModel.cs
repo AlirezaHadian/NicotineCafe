@@ -25,6 +25,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private Product? _currentProduct;
     [ObservableProperty] private bool _isProductVisible;
     [ObservableProperty] private bool _isEngineConnected;
+    [ObservableProperty] private bool _isPaused;
     [ObservableProperty] private double _audioLevel; // 0.0–1.0, bound to the equalizer/orb visual
     [ObservableProperty] private string _statusText = "در حال اتصال به موتور تشخیص...";
 
@@ -56,8 +57,12 @@ public partial class MainViewModel : ObservableObject
                 "engine_ready" => "در انتظار مشتری...",
                 "processing" => "در حال پردازش...",
                 "no_speech_detected" => "متوجه نشدم — دوباره بفرمایید",
+                "paused" => "موقتاً متوقف شد",
+                "resumed" => "در انتظار مشتری...",
                 _ => StatusText,
             };
+            if (msg.Message == "paused") IsPaused = true;
+            if (msg.Message == "resumed") IsPaused = false;
             return;
         }
 
@@ -86,6 +91,15 @@ public partial class MainViewModel : ObservableObject
 
     [RelayCommand]
     private void CloseProduct() => HideProduct();
+
+    [RelayCommand]
+    private async Task ToggleListeningAsync()
+    {
+        if (IsPaused)
+            await _speechClient.SendCommandAsync("resume");
+        else
+            await _speechClient.SendCommandAsync("pause");
+    }
 
     private void HideProduct()
     {

@@ -13,27 +13,42 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Top bar -->
-        <Grid Grid.Row="0" Margin="56,42,56,0">
+        <!-- Top bar — deliberately LTR regardless of the RTL content below,
+             so it reads like a normal Windows title bar: brand on the left,
+             window controls on the right. -->
+        <Grid Grid.Row="0" Margin="32,24,32,0" FlowDirection="LeftToRight">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Ellipse Width="10" Height="10" Fill="{DynamicResource AccentGoldBrush}" Margin="0,0,10,0" />
-                <TextBlock Text="نیکوتین کافه" Style="{StaticResource BrandLogoStyle}" />
+                <Border Width="34" Height="34" CornerRadius="10" Background="{DynamicResource GoldGradientBrush}"
+                        Margin="0,0,12,0">
+                    <TextBlock Text="N" FontWeight="Bold" FontSize="18" Foreground="#0B0D12"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                <TextBlock Text="NICOTINE CAFÉ" FontFamily="{DynamicResource FontDisplay}"
+                           FontSize="19" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}"
+                           VerticalAlignment="Center" />
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                <Ellipse Width="9" Height="9" Margin="0,0,8,0"
+                <Ellipse Width="8" Height="8" Margin="0,0,7,0" VerticalAlignment="Center"
                          Fill="{Binding IsEngineConnected, Converter={StaticResource ConnectionDotConverter}}" />
                 <TextBlock Text="{Binding IsEngineConnected, Converter={StaticResource ConnectionTextConverter}}"
-                           FontSize="13" Foreground="{DynamicResource TextFaintBrush}" Margin="0,0,18,0" />
-                <Button Content="⚙" FontSize="16" Width="32" Height="32" Padding="0"
-                        Background="Transparent" BorderThickness="0" Cursor="Hand"
-                        Foreground="{DynamicResource TextFaintBrush}"
-                        Click="AdminButton_Click" ToolTip="مدیریت محصولات" />
+                           FontSize="12" Foreground="{DynamicResource TextFaintBrush}" VerticalAlignment="Center"
+                           Margin="0,0,20,0" />
+
+                <Button Content="{Binding IsPaused, Converter={StaticResource PauseResumeTextConverter}}"
+                        Command="{Binding ToggleListeningCommand}" Style="{StaticResource TopBarPillButtonStyle}" />
+                <Button Content="⚙" ToolTip="مدیریت محصولات" Click="AdminButton_Click"
+                        Style="{StaticResource TopBarIconButtonStyle}" />
+                <Border Width="1" Height="20" Background="{DynamicResource BorderBrush2}" Margin="8,0" />
+                <Button Content="—" ToolTip="کوچک‌کردن" Click="MinimizeButton_Click"
+                        Style="{StaticResource TopBarIconButtonStyle}" />
+                <Button Content="✕" ToolTip="خروج از برنامه" Click="CloseButton_Click"
+                        Style="{StaticResource TopBarCloseButtonStyle}" />
             </StackPanel>
         </Grid>
 
