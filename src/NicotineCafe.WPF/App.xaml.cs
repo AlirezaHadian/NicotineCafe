@@ -22,6 +22,7 @@ public partial class App : Application
         // --- Data layer ---
         services.AddSingleton(new SqliteConnectionFactory(dbPath));
         services.AddSingleton<IProductRepository, SqliteProductRepository>();
+        services.AddSingleton<IEngineSettingsRepository, SqliteEngineSettingsRepository>();
 
         // --- Service layer ---
         services.AddSingleton<IProductService, ProductService>();

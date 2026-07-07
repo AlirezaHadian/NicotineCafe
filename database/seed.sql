@@ -221,3 +221,12 @@ INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, Nico
 VALUES (9,5,'پارلیامنت منتول','Parliament Menthol','Images/parliament_menthol.png', 6, 0.5, 6, 20);
 INSERT INTO Products (BrandId, VariantId, NameFa, NameEn, ImagePath, TarMg, NicotineMg, CarbonMonoxideMg, PackSize)
 VALUES (7,1,'ایست آبی','ESSE Blue','Images/esse_blue.png', 5, 0.4, 5, 20);
+
+-- ---------- Default voice-engine settings (editable in WPF Admin) ----------
+INSERT INTO EngineSettings (Key, Value) VALUES ('model_size', 'tiny');
+INSERT INTO EngineSettings (Key, Value) VALUES ('beam_size', '1');
+INSERT INTO EngineSettings (Key, Value) VALUES ('speech_threshold', '0.09');
+INSERT INTO EngineSettings (Key, Value) VALUES ('silence_hangover_s', '0.55');
+INSERT INTO EngineSettings (Key, Value) VALUES ('min_utterance_s', '0.9');
+INSERT INTO EngineSettings (Key, Value) VALUES ('cpu_threads', '2');
+INSERT INTO EngineSettings (Key, Value) VALUES ('min_confidence', '0.60');

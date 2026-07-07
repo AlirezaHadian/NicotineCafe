@@ -15,6 +15,7 @@ namespace NicotineCafe.WPF.ViewModels;
 public partial class AdminViewModel : ObservableObject
 {
     private readonly IProductService _productService;
+    private readonly IEngineSettingsRepository _settingsRepository;
 
     public ObservableCollection<Product> Products { get; } = new();
     public ObservableCollection<NamedOption> Brands { get; } = new();
@@ -41,10 +42,61 @@ public partial class AdminViewModel : ObservableObject
 
     [ObservableProperty] private string _statusMessage = string.Empty;
 
-    public AdminViewModel(IProductService productService)
+    // --- Voice engine tuning (EngineSettings table; needs an app restart to take effect) ---
+    [ObservableProperty] private string _settingModelSize = "tiny";
+    [ObservableProperty] private string _settingBeamSize = "1";
+    [ObservableProperty] private string _settingSpeechThreshold = "0.09";
+    [ObservableProperty] private string _settingSilenceHangoverS = "0.55";
+    [ObservableProperty] private string _settingMinUtteranceS = "0.9";
+    [ObservableProperty] private string _settingCpuThreads = "2";
+    [ObservableProperty] private string _settingMinConfidence = "0.60";
+    [ObservableProperty] private string _settingsStatusMessage = string.Empty;
+
+    public AdminViewModel(IProductService productService, IEngineSettingsRepository settingsRepository)
     {
         _productService = productService;
+        _settingsRepository = settingsRepository;
         _ = LoadAsync();
+        _ = LoadSettingsAsync();
+    }
+
+    private async Task LoadSettingsAsync()
+    {
+        try
+        {
+            var s = await _settingsRepository.GetAllAsync();
+            if (s.TryGetValue("model_size", out var v1)) SettingModelSize = v1;
+            if (s.TryGetValue("beam_size", out var v2)) SettingBeamSize = v2;
+            if (s.TryGetValue("speech_threshold", out var v3)) SettingSpeechThreshold = v3;
+            if (s.TryGetValue("silence_hangover_s", out var v4)) SettingSilenceHangoverS = v4;
+            if (s.TryGetValue("min_utterance_s", out var v5)) SettingMinUtteranceS = v5;
+            if (s.TryGetValue("cpu_threads", out var v6)) SettingCpuThreads = v6;
+            if (s.TryGetValue("min_confidence", out var v7)) SettingMinConfidence = v7;
+        }
+        catch (Exception ex)
+        {
+            SettingsStatusMessage = $"خطا در بارگذاری تنظیمات: {ex.Message}";
+        }
+    }
+
+    [RelayCommand]
+    private async Task SaveSettingsAsync()
+    {
+        try
+        {
+            await _settingsRepository.SetAsync("model_size", SettingModelSize.Trim());
+            await _settingsRepository.SetAsync("beam_size", SettingBeamSize.Trim());
+            await _settingsRepository.SetAsync("speech_threshold", SettingSpeechThreshold.Trim());
+            await _settingsRepository.SetAsync("silence_hangover_s", SettingSilenceHangoverS.Trim());
+            await _settingsRepository.SetAsync("min_utterance_s", SettingMinUtteranceS.Trim());
+            await _settingsRepository.SetAsync("cpu_threads", SettingCpuThreads.Trim());
+            await _settingsRepository.SetAsync("min_confidence", SettingMinConfidence.Trim());
+            SettingsStatusMessage = "ذخیره شد — برای اعمال، برنامه رو ببند و دوباره باز کن.";
+        }
+        catch (Exception ex)
+        {
+            SettingsStatusMessage = $"خطا در ذخیره‌سازی: {ex.Message}";
+        }
     }
 
     private async Task LoadAsync()

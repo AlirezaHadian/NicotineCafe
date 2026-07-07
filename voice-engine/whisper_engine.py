@@ -59,6 +59,7 @@ class WhisperEngine:
         self.config = config
         self._model: Optional[WhisperModel] = None
         self.load_time: float = 0.0
+        self.cpu_threads: int = 2  # overridable before calling load() — see EngineSettings
 
     # ------------------------------------------------------------------
     # Model lifecycle
@@ -70,7 +71,7 @@ class WhisperEngine:
             self.config.model_size,
             device="cpu",
             compute_type=self.config.compute_type,
-            cpu_threads=4,  # NOTE: more threads is NOT always faster for small models —
+            cpu_threads=self.cpu_threads,  # NOTE: more threads is NOT always faster for small models —
                             # oversubscription can add scheduling overhead that dominates
                             # the actual compute. Tune this per-machine if needed.
         )

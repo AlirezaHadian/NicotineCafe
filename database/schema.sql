@@ -62,3 +62,10 @@ CREATE TABLE IF NOT EXISTS RecognitionLog (
     IsValid         INTEGER NOT NULL,
     CreatedAt       TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+-- Tunable voice-engine parameters, editable from the WPF admin screen.
+-- The Python engine reads these at startup (changes need an app restart).
+CREATE TABLE IF NOT EXISTS EngineSettings (
+    Key             TEXT PRIMARY KEY,
+    Value           TEXT NOT NULL
+);

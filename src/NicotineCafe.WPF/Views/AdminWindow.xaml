@@ -6,7 +6,9 @@
         Background="{DynamicResource BgGradientBrush}"
         FlowDirection="RightToLeft" FontFamily="{DynamicResource FontBody}">
 
-    <Grid Margin="28">
+    <TabControl Background="Transparent" BorderThickness="0" Margin="20">
+    <TabItem Header="محصولات">
+    <Grid Margin="12">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="20" />
@@ -131,4 +133,44 @@
             </StackPanel>
         </Border>
     </Grid>
+    </TabItem>
+
+    <TabItem Header="تنظیمات موتور تشخیص گفتار">
+        <Border Background="{DynamicResource PanelGradientBrush}" CornerRadius="18"
+                BorderBrush="{DynamicResource BorderBrush2}" BorderThickness="1" Padding="30" Margin="12"
+                MaxWidth="620" HorizontalAlignment="Left">
+            <StackPanel>
+                <TextBlock Text="تنظیمات موتور صدا" Style="{StaticResource BrandLogoStyle}" FontSize="18" Margin="0,0,0,6" />
+                <TextBlock Text="تغییرات بعد از بستن و باز کردن دوباره‌ی برنامه اعمال می‌شن (موتور صدا نیاز به ری‌استارت داره)."
+                           Style="{StaticResource SpecLabelStyle}" TextWrapping="Wrap" Margin="0,0,0,20" />
+
+                <TextBlock Text="اندازه‌ی مدل — tiny / base / small (tiny = سریع‌ترین، small = دقیق‌ترین)" Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" />
+                <TextBox Text="{Binding SettingModelSize}" Margin="0,0,0,16" FlowDirection="LeftToRight" />
+
+                <TextBlock Text="Beam Size (۱ = سریع، ۵ = دقیق‌تر ولی کندتر)" Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" />
+                <TextBox Text="{Binding SettingBeamSize}" Margin="0,0,0,16" FlowDirection="LeftToRight" />
+
+                <TextBlock Text="آستانه‌ی تشخیص صدا (Speech Threshold، ۰ تا ۱ — پایین‌تر = حساس‌تر به صدای کم)" Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" />
+                <TextBox Text="{Binding SettingSpeechThreshold}" Margin="0,0,0,16" FlowDirection="LeftToRight" />
+
+                <TextBlock Text="مکث سکوت برای پایان گفتار (ثانیه)" Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" />
+                <TextBox Text="{Binding SettingSilenceHangoverS}" Margin="0,0,0,16" FlowDirection="LeftToRight" />
+
+                <TextBlock Text="حداقل طول گفتار برای پردازش (ثانیه — کمتر از این نادیده گرفته می‌شه)" Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" />
+                <TextBox Text="{Binding SettingMinUtteranceS}" Margin="0,0,0,16" FlowDirection="LeftToRight" />
+
+                <TextBlock Text="تعداد هسته‌ی CPU برای موتور صدا" Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" />
+                <TextBox Text="{Binding SettingCpuThreads}" Margin="0,0,0,16" FlowDirection="LeftToRight" />
+
+                <TextBlock Text="حداقل اطمینان برای پذیرفتن یک تشخیص (۰ تا ۱)" Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" />
+                <TextBox Text="{Binding SettingMinConfidence}" Margin="0,0,0,24" FlowDirection="LeftToRight" />
+
+                <Button Content="ذخیره‌ی تنظیمات" Command="{Binding SaveSettingsCommand}" Padding="0,10" />
+
+                <TextBlock Text="{Binding SettingsStatusMessage}" Foreground="{DynamicResource AccentGoldBrightBrush}"
+                           Margin="0,16,0,0" TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+    </TabItem>
+    </TabControl>
 </Window>

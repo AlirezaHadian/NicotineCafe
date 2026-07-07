@@ -399,7 +399,9 @@ class AutoVadRecorder:
             samplerate=self.config.sample_rate,
             channels=self.config.channels,
             dtype=self.config.dtype,
-            blocksize=int(self.config.sample_rate * 0.02),  # ~20ms chunks
+            blocksize=int(self.config.sample_rate * 0.03),  # ~30ms chunks — fewer, larger callbacks
+            latency="high",  # more internal buffering so a busy CPU (mid-transcribe)
+                              # doesn't cause "input overflow" / dropped audio
             callback=self._sd_callback,
         )
         self._stream.start()

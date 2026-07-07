@@ -44,10 +44,37 @@ def log(msg: str) -> None:
     print(f"[{ts}] {msg}", flush=True)
 
 
+def load_engine_settings(db_path: Path) -> dict:
+    """
+    Read EngineSettings(Key, Value) from the shared SQLite DB — these are
+    editable from the WPF admin screen. Returns {} if the table doesn't
+    exist yet (older DB) so this never breaks startup.
+    """
+    import sqlite3
+    try:
+        conn = sqlite3.connect(str(db_path))
+        rows = conn.execute("SELECT Key, Value FROM EngineSettings").fetchall()
+        conn.close()
+        return {k: v for k, v in rows}
+    except sqlite3.Error:
+        return {}
+
+
 class VoiceEngineServer:
     def __init__(self, db_path: Path, port: int, model_size: str = "tiny") -> None:
         self.port = port
-        self.config = AppConfig(whisper=WhisperConfig(model_size=model_size)).resolve_paths()
+        settings = load_engine_settings(db_path)
+        if settings:
+            log(f"[VoiceEngineServer] Loaded {len(settings)} setting(s) from EngineSettings table: {settings}")
+
+        # CLI/launcher-provided model_size wins only if the DB doesn't specify one,
+        # so the admin screen is the single source of truth once configured.
+        effective_model = settings.get("model_size", model_size)
+        self.config = AppConfig(whisper=WhisperConfig(model_size=effective_model)).resolve_paths()
+        if "beam_size" in settings:
+            self.config.whisper.beam_size = int(settings["beam_size"])
+        if "min_confidence" in settings:
+            self.config.matcher.min_confidence = float(settings["min_confidence"])
 
         log(f"[VoiceEngineServer] Loading product catalog from {db_path} ...")
         self.matcher = ProductMatcher.from_sqlite(db_path, self.config)
@@ -56,6 +83,9 @@ class VoiceEngineServer:
             f"{len(self.matcher.available_variants)} variants.")
 
         self.engine = WhisperEngine(self.config.whisper)
+        if "cpu_threads" in settings:
+            self.engine.cpu_threads = int(settings["cpu_threads"])
+
         # Always-listening VAD recorder: no button, no start/stop commands.
         # As soon as it detects speech -> silence, it hands the audio to
         # _on_utterance() automatically.
@@ -63,6 +93,9 @@ class VoiceEngineServer:
             self.config.recorder,
             utterance_callback=self._on_utterance,
             level_callback=self._send_audio_level,
+            speech_threshold=float(settings.get("speech_threshold", 0.09)),
+            silence_hangover_s=float(settings.get("silence_hangover_s", 0.55)),
+            min_utterance_s=float(settings.get("min_utterance_s", 0.9)),
         )
 
         self._conn: socket.socket | None = None
