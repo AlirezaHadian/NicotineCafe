@@ -58,15 +58,11 @@ class RecorderConfig:
 
 @dataclass
 class MatcherConfig:
-    """Fuzzy matching thresholds and weights."""
-    brand_weight: float = 0.70
-    variant_weight: float = 0.30
-    # Brand names (وینستون، مارلبرو) are distinctive → lower threshold OK
+    """Fuzzy matching thresholds — brand-only recognition."""
+    # Brand names (وینستون، مارلبرو) are distinctive → this is the only
+    # threshold that matters now; variant/model matching was removed.
     fuzzy_threshold: float = 76.0
-    # Variant words (آبی، گلد) are common Persian words → need higher bar
-    # to avoid matching filler verbs like داری، بده against دبل، گلد
-    variant_fuzzy_threshold: float = 82.0
-    min_confidence: float = 0.60  # raised from 0.48 — filters out low-confidence noise matches
+    min_confidence: float = 0.60  # filters out low-confidence noise matches
                                    # (garbled/unrelated speech incorrectly mapped to a brand)
 
 
@@ -78,7 +74,6 @@ class AppConfig:
     matcher: MatcherConfig = field(default_factory=MatcherConfig)
 
     brands_file: Path = Path("brands.json")
-    variants_file: Path = Path("variants.json")
     results_dir: Path = Path("results")
     samples_dir: Path = Path("samples")
     debug: bool = False
@@ -87,7 +82,6 @@ class AppConfig:
         root = base or Path.cwd()
         self.recorder.recordings_dir = root / self.recorder.recordings_dir
         self.brands_file = root / self.brands_file
-        self.variants_file = root / self.variants_file
         self.results_dir = root / self.results_dir
         self.samples_dir = root / self.samples_dir
         return self

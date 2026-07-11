@@ -76,11 +76,9 @@ class VoiceEngineServer:
         if "min_confidence" in settings:
             self.config.matcher.min_confidence = float(settings["min_confidence"])
 
-        log(f"[VoiceEngineServer] Loading product catalog from {db_path} ...")
+        log(f"[VoiceEngineServer] Loading brand catalog from {db_path} ...")
         self.matcher = ProductMatcher.from_sqlite(db_path, self.config)
-        log(f"[VoiceEngineServer] Catalog loaded: "
-            f"{len(self.matcher.available_brands)} brands, "
-            f"{len(self.matcher.available_variants)} variants.")
+        log(f"[VoiceEngineServer] Catalog loaded: {len(self.matcher.available_brands)} brands.")
 
         self.engine = WhisperEngine(self.config.whisper)
         if "cpu_threads" in settings:
@@ -123,14 +121,12 @@ class VoiceEngineServer:
         payload = {
             "type": "recognition",
             "isValid": result.is_valid,
-            "productId": result.product_id,
+            "brandId": result.brand_id,
             "rawText": result.raw_text,
             "normalisedText": result.normalised_text,
-            "confidence": round(result.product.confidence, 4),
+            "confidence": round(result.confidence, 4),
             "debugBrand": result.brand_match.brand,
             "debugBrandScore": round(result.brand_match.score, 1),
-            "debugVariant": result.variant_match.variant,
-            "debugVariantScore": round(result.variant_match.score, 1),
         }
         log(f"[VoiceEngineServer] recognition: {payload}")
         self._send(payload)

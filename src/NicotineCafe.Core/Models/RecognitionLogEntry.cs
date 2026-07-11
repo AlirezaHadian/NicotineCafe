@@ -1,19 +1,32 @@
 namespace NicotineCafe.Core.Models;
 
-/// <summary>Lightweight (Id, NameFa) pair for admin dropdowns.</summary>
-public sealed class NamedOption
+/// <summary>
+/// What the main screen displays after a recognition: the BRAND (name +
+/// one representative image), plus the list of "models we carry" for it.
+/// Recognition is brand-only (no per-variant matching) — this is purely a
+/// display concern.
+/// </summary>
+public sealed class BrandDisplay
+{
+    public int BrandId { get; init; }
+    public string NameFa { get; init; } = string.Empty;
+    public string NameEn { get; init; } = string.Empty;
+    public string? ImagePath { get; init; }
+    public IReadOnlyList<string> ModelNames { get; init; } = Array.Empty<string>();
+}
+
+/// <summary>A single brand alias row, editable from the admin screen.</summary>
+public sealed class AliasEntry
 {
     public int Id { get; set; }
-    public string NameFa { get; set; } = string.Empty;
-
-    public override string ToString() => NameFa; // helps if a control binds without DisplayMemberPath
+    public string Alias { get; set; } = string.Empty;
 }
 
 public sealed class RecognitionLogEntry
 {
     public string RawText { get; init; } = string.Empty;
     public string NormalisedText { get; init; } = string.Empty;
-    public int? MatchedProductId { get; init; }
+    public int? MatchedBrandId { get; init; }
     public double Confidence { get; init; }
     public bool IsValid { get; init; }
 }

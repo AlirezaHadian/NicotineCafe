@@ -8,7 +8,7 @@ namespace NicotineCafe.Services;
 
 /// <summary>
 /// TCP loopback client for the Python voice engine.
-/// Protocol: newline-delimited JSON, one RecognizedProductMessage per line.
+/// Protocol: newline-delimited JSON, one RecognizedBrandMessage per line.
 /// The Python side is started as a child process by the WPF app
 /// (see ProcessLauncher) and listens on 127.0.0.1:{port}.
 /// </summary>
@@ -19,7 +19,7 @@ public sealed class SpeechEngineClient : ISpeechEngineClient
     private TcpClient? _client;
     private CancellationTokenSource? _readCts;
 
-    public event EventHandler<RecognizedProductMessage>? ProductRecognized;
+    public event EventHandler<RecognizedBrandMessage>? BrandRecognized;
     public event EventHandler<double>? AudioLevelChanged;
     public event EventHandler<bool>? ConnectionStateChanged;
 
@@ -111,10 +111,10 @@ public sealed class SpeechEngineClient : ISpeechEngineClient
                 return;
             }
 
-            var msg = JsonSerializer.Deserialize<RecognizedProductMessage>(jsonLine,
+            var msg = JsonSerializer.Deserialize<RecognizedBrandMessage>(jsonLine,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             if (msg is not null)
-                ProductRecognized?.Invoke(this, msg);
+                BrandRecognized?.Invoke(this, msg);
         }
         catch (JsonException)
         {

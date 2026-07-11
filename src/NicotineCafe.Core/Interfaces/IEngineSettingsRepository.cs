@@ -2,7 +2,7 @@ namespace NicotineCafe.Core.Interfaces;
 
 /// <summary>
 /// Key-value store for tunable voice-engine parameters (EngineSettings
-/// table) — kept separate from IProductRepository since it's a different
+/// table) — kept separate from IBrandRepository since it's a different
 /// concern (engine tuning, not product data).
 /// </summary>
 public interface IEngineSettingsRepository

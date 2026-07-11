@@ -8,7 +8,7 @@ namespace NicotineCafe.Core.Interfaces;
 /// </summary>
 public interface ISpeechEngineClient : IAsyncDisposable
 {
-    event EventHandler<RecognizedProductMessage>? ProductRecognized;
+    event EventHandler<RecognizedBrandMessage>? BrandRecognized;
     event EventHandler<double>? AudioLevelChanged; // 0.0–1.0, for the equalizer UI
     event EventHandler<bool>? ConnectionStateChanged;
 

@@ -7,10 +7,11 @@ using NicotineCafe.Core.Models;
 namespace NicotineCafe.WPF.ViewModels;
 
 /// <summary>
-/// Drives the single-product display screen:
+/// Drives the single-brand display screen:
 ///  - listens to the (always-on, VAD-driven) speech engine for recognitions
-///  - shows a product for up to 5 minutes
-///  - hides early on: (a) a new product being recognised, (b) operator clicking the X
+///  - shows a BRAND card (name + image + "what we carry" model list) for up
+///    to 5 minutes — recognition is brand-only now, no per-variant matching
+///  - hides early on: (a) a new brand being recognised, (b) operator clicking the X
 /// No button, no push-to-talk — the engine listens continuously and pushes
 /// a recognition the instant a customer finishes speaking.
 /// </summary>
@@ -18,26 +19,30 @@ public partial class MainViewModel : ObservableObject
 {
     private static readonly TimeSpan DisplayDuration = TimeSpan.FromMinutes(5);
 
-    private readonly IProductService _productService;
+    private readonly IBrandService _brandService;
     private readonly ISpeechEngineClient _speechClient;
+    private readonly IEngineSettingsRepository _settingsRepository;
     private readonly DispatcherTimer _hideTimer;
 
-    [ObservableProperty] private Product? _currentProduct;
+    [ObservableProperty] private BrandDisplay? _currentBrand;
     [ObservableProperty] private bool _isProductVisible;
     [ObservableProperty] private bool _isEngineConnected;
     [ObservableProperty] private bool _isPaused;
+    [ObservableProperty] private bool _showModelList = true; // from EngineSettings("show_model_list"), operator-toggleable
     [ObservableProperty] private double _audioLevel; // 0.0–1.0, bound to the equalizer/orb visual
     [ObservableProperty] private string _statusText = "در حال اتصال به موتور تشخیص...";
 
-    public MainViewModel(IProductService productService, ISpeechEngineClient speechClient)
+    public MainViewModel(IBrandService brandService, ISpeechEngineClient speechClient,
+        IEngineSettingsRepository settingsRepository)
     {
-        _productService = productService;
+        _brandService = brandService;
         _speechClient = speechClient;
+        _settingsRepository = settingsRepository;
 
         _hideTimer = new DispatcherTimer { Interval = DisplayDuration };
         _hideTimer.Tick += (_, _) => HideProduct();
 
-        _speechClient.ProductRecognized += OnProductRecognized;
+        _speechClient.BrandRecognized += OnBrandRecognized;
         _speechClient.AudioLevelChanged += (_, level) => AudioLevel = level;
         _speechClient.ConnectionStateChanged += (_, connected) =>
         {
@@ -46,9 +51,24 @@ public partial class MainViewModel : ObservableObject
         };
 
         _ = _speechClient.ConnectAsync();
+        _ = LoadDisplaySettingsAsync();
     }
 
-    private async void OnProductRecognized(object? sender, Core.DTOs.RecognizedProductMessage msg)
+    private async Task LoadDisplaySettingsAsync()
+    {
+        try
+        {
+            var settings = await _settingsRepository.GetAllAsync();
+            if (settings.TryGetValue("show_model_list", out var v))
+                ShowModelList = v.Equals("true", StringComparison.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            // keep the default (true) if settings can't be read for any reason
+        }
+    }
+
+    private async void OnBrandRecognized(object? sender, Core.DTOs.RecognizedBrandMessage msg)
     {
         if (msg.Type == "status")
         {
@@ -66,23 +86,23 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        if (!msg.IsValid || msg.ProductId is null)
+        if (!msg.IsValid || msg.BrandId is null)
         {
-            StatusText = "محصول شناسایی نشد — دوباره بفرمایید";
+            StatusText = "برند شناسایی نشد — دوباره بفرمایید";
             return;
         }
 
-        var product = await _productService.FindProductAsync(msg.ProductId.Value);
-        if (product is null) return;
+        var brandDisplay = await _brandService.GetBrandDisplayAsync(msg.BrandId.Value);
+        if (brandDisplay is null) return;
 
-        // Rule: a NEW recognised product always replaces whatever is showing,
+        // Rule: a NEW recognised brand always replaces whatever is showing,
         // and resets the 5-minute window.
-        App.Current.Dispatcher.Invoke(() => ShowProduct(product));
+        App.Current.Dispatcher.Invoke(() => ShowBrand(brandDisplay));
     }
 
-    private void ShowProduct(Product product)
+    private void ShowBrand(BrandDisplay brand)
     {
-        CurrentProduct = product;
+        CurrentBrand = brand;
         IsProductVisible = true;
 
         _hideTimer.Stop();
@@ -105,7 +125,7 @@ public partial class MainViewModel : ObservableObject
     {
         _hideTimer.Stop();
         IsProductVisible = false;
-        CurrentProduct = null;
+        CurrentBrand = null;
         StatusText = "در انتظار مشتری...";
     }
 }

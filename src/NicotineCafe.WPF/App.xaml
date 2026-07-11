@@ -9,6 +9,7 @@
             <conv:ConnectionDotConverter x:Key="ConnectionDotConverter" />
             <conv:ConnectionTextConverter x:Key="ConnectionTextConverter" />
             <conv:PauseResumeTextConverter x:Key="PauseResumeTextConverter" />
+            <conv:ImagePathToSourceConverter x:Key="ImagePathToSourceConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/Fonts.xaml" />
                 <ResourceDictionary Source="Themes/Colors.xaml" />

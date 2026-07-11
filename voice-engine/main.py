@@ -38,16 +38,14 @@ def print_result(result, inference_time: float | None = None) -> None:  # type: 
     print(f"  Normalised   : {r.normalised_text!r}")
     print(f"  Brand        : {r.brand_match.brand or '—'}"
           f"  (score: {r.brand_match.score:.0%})")
-    print(f"  Variant      : {r.variant_match.variant or '—'}"
-          f"  (score: {r.variant_match.score:.0%})")
-    print(f"  Confidence   : {r.product.confidence:.0%}")
+    print(f"  Confidence   : {r.confidence:.0%}")
     if inference_time is not None:
         print(f"  Infer time   : {inference_time:.3f}s")
     print()
     if r.is_valid:
-        print(f"  ✅  محصول: {r.product.product_name}")
+        print(f"  ✅  برند: {r.brand_match.brand}")
     else:
-        print("  ❌  محصولی شناسایی نشد")
+        print("  ❌  برندی شناسایی نشد")
     print(sep)
 
 

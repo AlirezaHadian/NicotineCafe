@@ -42,7 +42,7 @@
 
                 <Button Content="{Binding IsPaused, Converter={StaticResource PauseResumeTextConverter}}"
                         Command="{Binding ToggleListeningCommand}" Style="{StaticResource TopBarPillButtonStyle}" />
-                <Button Content="⚙" ToolTip="مدیریت محصولات" Click="AdminButton_Click"
+                <Button Content="⚙" ToolTip="مدیریت برندها" Click="AdminButton_Click"
                         Style="{StaticResource TopBarIconButtonStyle}" />
                 <Border Width="1" Height="20" Background="{DynamicResource BorderBrush2}" Margin="8,0" />
                 <Button Content="—" ToolTip="کوچک‌کردن" Click="MinimizeButton_Click"
@@ -63,7 +63,9 @@
                            HorizontalAlignment="Center" Margin="0,28,0,0" />
             </StackPanel>
 
-            <!-- Product card -->
+            <!-- Brand card: recognition is brand-only now — the customer
+                 sees the BRAND (name + image) plus a "what we carry" list
+                 of models underneath (toggle: ShowModelList), no specs. -->
             <Border x:Name="ProductCard" MaxWidth="1120" Padding="56"
                     Background="{DynamicResource PanelGradientBrush}"
                     BorderBrush="{DynamicResource BorderBrush2}" BorderThickness="1"
@@ -80,46 +82,39 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Product image -->
+                    <!-- Brand image -->
                     <Border Grid.Column="0" CornerRadius="20" Background="#0C0E14" ClipToBounds="True"
                             BorderBrush="{DynamicResource BorderBrush2}" BorderThickness="1" Height="360">
-                        <Image Source="{Binding CurrentProduct.ImagePath}" Stretch="Uniform" Margin="16" />
+                        <Image Source="{Binding CurrentBrand.ImagePath, Converter={StaticResource ImagePathToSourceConverter}}"
+                               Stretch="Uniform" Margin="16" />
                     </Border>
 
                     <!-- Details -->
                     <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                        <Border Background="#1E2230" CornerRadius="20" Padding="14,6" HorizontalAlignment="Right" Margin="0,0,0,18">
-                            <TextBlock Text="{Binding CurrentProduct.BrandNameFa}"
-                                       FontSize="14" Foreground="{DynamicResource AccentGoldBrightBrush}" />
-                        </Border>
+                        <TextBlock Text="{Binding CurrentBrand.NameFa}" Style="{StaticResource TitleTextStyle}" />
+                        <TextBlock Text="{Binding CurrentBrand.NameEn}" Style="{StaticResource SubTitleTextStyle}"
+                                   FlowDirection="LeftToRight" HorizontalAlignment="Right" Margin="0,6,0,36" />
 
-                        <TextBlock Text="{Binding CurrentProduct.NameFa}" Style="{StaticResource TitleTextStyle}" />
-                        <TextBlock Text="{Binding CurrentProduct.NameEn}" Style="{StaticResource SubTitleTextStyle}"
-                                   FlowDirection="LeftToRight" HorizontalAlignment="Right" Margin="0,6,0,32" />
+                        <StackPanel Visibility="{Binding ShowModelList, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="این مدل‌ها رو از این برند داریم:" Style="{StaticResource SpecLabelStyle}"
+                                       FontSize="15" Margin="0,0,0,12" />
 
-                        <!-- Spec badges -->
-                        <StackPanel Orientation="Horizontal">
-                            <Border Style="{StaticResource SpecBadgeBorderStyle}" Margin="0,0,14,0">
-                                <StackPanel>
-                                    <TextBlock Text="قطران" Style="{StaticResource SpecLabelStyle}" />
-                                    <TextBlock Text="{Binding CurrentProduct.TarMg, StringFormat={}{0} mg}"
-                                               Style="{StaticResource SpecValueStyle}" />
-                                </StackPanel>
-                            </Border>
-                            <Border Style="{StaticResource SpecBadgeBorderStyle}" Margin="0,0,14,0">
-                                <StackPanel>
-                                    <TextBlock Text="نیکوتین" Style="{StaticResource SpecLabelStyle}" />
-                                    <TextBlock Text="{Binding CurrentProduct.NicotineMg, StringFormat={}{0} mg}"
-                                               Style="{StaticResource SpecValueStyle}" />
-                                </StackPanel>
-                            </Border>
-                            <Border Style="{StaticResource SpecBadgeBorderStyle}">
-                                <StackPanel>
-                                    <TextBlock Text="مونوکسیدکربن" Style="{StaticResource SpecLabelStyle}" />
-                                    <TextBlock Text="{Binding CurrentProduct.CarbonMonoxideMg, StringFormat={}{0} mg}"
-                                               Style="{StaticResource SpecValueStyle}" />
-                                </StackPanel>
-                            </Border>
+                            <ItemsControl ItemsSource="{Binding CurrentBrand.ModelNames}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#1E2230" BorderBrush="{DynamicResource BorderBrush2}"
+                                                BorderThickness="1" CornerRadius="16" Padding="16,8" Margin="0,0,10,10">
+                                            <TextBlock Text="{Binding}" FontSize="16"
+                                                       Foreground="{DynamicResource AccentGoldBrightBrush}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
                     </StackPanel>
                 </Grid>

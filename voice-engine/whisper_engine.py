@@ -59,7 +59,7 @@ class WhisperEngine:
         self.config = config
         self._model: Optional[WhisperModel] = None
         self.load_time: float = 0.0
-        self.cpu_threads: int = 2  # overridable before calling load() — see EngineSettings
+        self.cpu_threads: int = 4  # overridable before calling load() — see EngineSettings
 
     # ------------------------------------------------------------------
     # Model lifecycle

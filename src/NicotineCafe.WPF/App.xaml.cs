@@ -21,11 +21,11 @@ public partial class App : Application
 
         // --- Data layer ---
         services.AddSingleton(new SqliteConnectionFactory(dbPath));
-        services.AddSingleton<IProductRepository, SqliteProductRepository>();
+        services.AddSingleton<IBrandRepository, SqliteBrandRepository>();
         services.AddSingleton<IEngineSettingsRepository, SqliteEngineSettingsRepository>();
 
         // --- Service layer ---
-        services.AddSingleton<IProductService, ProductService>();
+        services.AddSingleton<IBrandService, BrandService>();
         services.AddSingleton<ISpeechEngineClient>(_ => new SpeechEngineClient());
         services.AddSingleton(_ => new VoiceEngineProcessLauncher(
             pythonExe: "python",
