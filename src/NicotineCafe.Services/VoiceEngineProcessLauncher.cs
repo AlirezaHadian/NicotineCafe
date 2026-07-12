@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IO;
 
 namespace NicotineCafe.Services;
 
@@ -20,18 +21,21 @@ public sealed class VoiceEngineProcessLauncher : IDisposable
     private readonly string _dbPath;
     private readonly int _port;
     private readonly string? _modelPath;
+    private readonly string? _hfHomeDir;
     private readonly string _logPath;
     private bool _intentionalStop;
 
     public event EventHandler<string>? StartupFailed;
 
-    public VoiceEngineProcessLauncher(string pythonExe, string scriptPath, string dbPath, int port = 8765, string? modelPath = null)
+    public VoiceEngineProcessLauncher(string pythonExe, string scriptPath, string dbPath, int port = 8765,
+        string? modelPath = null, string? hfHomeDir = null)
     {
         _pythonExe = pythonExe;
         _scriptPath = scriptPath;
         _dbPath = dbPath;
         _port = port;
         _modelPath = modelPath;
+        _hfHomeDir = hfHomeDir;
         _logPath = System.IO.Path.Combine(AppContext.BaseDirectory, "voice-engine.log");
     }
 
@@ -78,6 +82,12 @@ public sealed class VoiceEngineProcessLauncher : IDisposable
         };
         psi.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
         psi.EnvironmentVariables["PYTHONUTF8"] = "1";
+        if (!string.IsNullOrWhiteSpace(_hfHomeDir) && Directory.Exists(_hfHomeDir))
+        {
+            // Points faster-whisper/huggingface_hub at a pre-downloaded model
+            // cache bundled with the installer — no internet needed, ever.
+            psi.EnvironmentVariables["HF_HOME"] = _hfHomeDir;
+        }
 
         try
         {

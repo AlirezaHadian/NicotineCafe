@@ -75,8 +75,23 @@ class WhisperEngine:
                             # oversubscription can add scheduling overhead that dominates
                             # the actual compute. Tune this per-machine if needed.
         )
+        self._warm_up()
         self.load_time = time.perf_counter() - t0
         return self.load_time
+
+    def _warm_up(self) -> None:
+        """
+        Run one throwaway inference on ~0.5s of silence right after loading.
+        The first real call into a freshly-loaded CTranslate2 model pays a
+        one-time allocation/JIT cost — better to eat that here than on the
+        first actual customer utterance.
+        """
+        try:
+            dummy = np.zeros(int(16000 * 0.5), dtype=np.float32)
+            segments, _ = self._model.transcribe(dummy, language=self.config.language, beam_size=1)
+            list(segments)  # force evaluation
+        except Exception:
+            pass  # warm-up is best-effort — never let it block startup
 
     @property
     def is_loaded(self) -> bool:
@@ -171,6 +186,8 @@ class WhisperEngine:
             log_prob_threshold=self.config.log_prob_threshold,
             vad_filter=self.config.vad_filter,
             vad_parameters=dict(min_silence_duration_ms=self.config.vad_min_silence_ms),
+            without_timestamps=True,  # we never use segment timestamps — skip computing them
+            word_timestamps=False,
         )
 
         # Iterate manually instead of list(segments_gen): a hallucination loop

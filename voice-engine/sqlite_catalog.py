@@ -55,3 +55,24 @@ class BrandCatalog:
         if brand_name is None:
             return None
         return self._brand_id_by_name.get(brand_name)
+
+    def log_recognition(self, raw_text: str, normalised_text: str,
+                         brand_id: Optional[int], confidence: float, is_valid: bool) -> None:
+        """
+        Append one row to RecognitionLog. Best-effort — a logging failure
+        must never interrupt the recognition flow. This is the raw material
+        for continuously improving aliases/thresholds over time: periodically
+        review invalid/low-confidence rows and add real phrases as aliases.
+        """
+        try:
+            with self._connect() as conn:
+                conn.execute(
+                    """
+                    INSERT INTO RecognitionLog (RawText, NormalisedText, MatchedBrandId, Confidence, IsValid)
+                    VALUES (?, ?, ?, ?, ?)
+                    """,
+                    (raw_text, normalised_text, brand_id, confidence, 1 if is_valid else 0),
+                )
+                conn.commit()
+        except sqlite3.Error:
+            pass

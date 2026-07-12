@@ -138,3 +138,8 @@ class ProductMatcher:
     @property
     def available_brands(self) -> list[str]:
         return self._brand_matcher.brand_names
+
+    @property
+    def catalog(self):
+        """The underlying BrandCatalog (None in offline/JSON mode)."""
+        return self._catalog

@@ -27,14 +27,26 @@ public partial class App : Application
         // --- Service layer ---
         services.AddSingleton<IBrandService, BrandService>();
         services.AddSingleton<ISpeechEngineClient>(_ => new SpeechEngineClient());
+
+        // Prefer a bundled, private copy of Python (python-embed\python.exe next
+        // to the exe) so the installer doesn't depend on Python being installed
+        // system-wide at all. Falls back to "python" on PATH if not bundled —
+        // useful during development.
+        var bundledPython = System.IO.Path.Combine(AppContext.BaseDirectory, "python-embed", "python.exe");
+        var pythonExe = System.IO.File.Exists(bundledPython) ? bundledPython : "python";
+
+        // Prefer a bundled, pre-downloaded Whisper model cache (model-cache\)
+        // so the app never needs internet at all, even on first run.
+        var bundledModelCache = System.IO.Path.Combine(AppContext.BaseDirectory, "model-cache");
+        var hfHomeDir = System.IO.Directory.Exists(bundledModelCache) ? bundledModelCache : null;
+
         services.AddSingleton(_ => new VoiceEngineProcessLauncher(
-            pythonExe: "python",
+            pythonExe: pythonExe,
             scriptPath: System.IO.Path.Combine(AppContext.BaseDirectory, "voice-engine", "main.py"),
             dbPath: dbPath,
             port: 8765,
-            // If you have a pre-downloaded faster-whisper model folder (no internet needed),
-            // point this at it, e.g.: @"C:\models\faster-whisper-base"
-            modelPath: null));
+            modelPath: null,
+            hfHomeDir: hfHomeDir));
 
         // --- ViewModels / Windows ---
         services.AddSingleton<MainViewModel>();

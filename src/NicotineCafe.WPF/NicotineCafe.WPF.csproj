@@ -33,5 +33,15 @@
     <!-- Voice engine: copied next to the WPF exe so VoiceEngineProcessLauncher can find main.py -->
     <None Include="..\..\voice-engine\**\*.*" Link="voice-engine\%(RecursiveDir)%(Filename)%(Extension)"
           CopyToOutputDirectory="PreserveNewest" Exclude="..\..\voice-engine\__pycache__\**" />
+    <!-- OPTIONAL: fully offline installer support. If you've prepared these
+         folders (see installer\prepare-python-bundle.ps1 + README), drop them
+         at the solution root and they'll be copied automatically:
+           python-embed\   — a private, portable Python + all pip packages
+           model-cache\    — a pre-downloaded faster-whisper model cache
+         Both are no-ops (harmless) if the folders don't exist. -->
+    <None Include="..\..\python-embed\**\*.*" Link="python-embed\%(RecursiveDir)%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\python-embed')" />
+    <None Include="..\..\model-cache\**\*.*" Link="model-cache\%(RecursiveDir)%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\model-cache')" />
   </ItemGroup>
 </Project>

@@ -178,6 +178,19 @@ class VoiceEngineServer:
         t_match_end = time.perf_counter()
         log(f"[VoiceEngineServer] TIMING: match={t_match_end - t_match_start:.3f}s, "
             f"TOTAL utterance->result={t_match_end - t_start:.2f}s")
+
+        # Best-effort logging for continuous accuracy improvement — review
+        # invalid/low-confidence rows periodically and add real phrases as
+        # aliases (see RecognitionLog table).
+        if self.matcher.catalog is not None:
+            self.matcher.catalog.log_recognition(
+                raw_text=result.raw_text,
+                normalised_text=result.normalised_text,
+                brand_id=result.brand_id,
+                confidence=result.confidence,
+                is_valid=result.is_valid,
+            )
+
         self._send_recognition(result)
 
     # ------------------------------------------------------------------
