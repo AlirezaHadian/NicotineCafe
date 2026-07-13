@@ -14,6 +14,8 @@ import sqlite3
 from pathlib import Path
 from typing import Optional
 
+from normalizer import PersianNormalizer
+
 
 class BrandCatalog:
     """
@@ -27,6 +29,7 @@ class BrandCatalog:
         self.db_path = db_path
         self.brands_raw: list[dict] = []
         self._brand_id_by_name: dict[str, int] = {}
+        self._norm = PersianNormalizer()
         self.reload()
 
     def _connect(self) -> sqlite3.Connection:
@@ -49,7 +52,7 @@ class BrandCatalog:
                     "name": row["NameFa"],
                     "aliases": [a["Alias"] for a in aliases],
                 })
-                self._brand_id_by_name[row["NameFa"]] = row["Id"]
+                self._brand_id_by_name[self._norm(row["NameFa"])] = row["Id"]
 
     def find_brand_id(self, brand_name: Optional[str]) -> Optional[int]:
         if brand_name is None:

@@ -189,3 +189,15 @@ INSERT INTO BrandAliases (BrandId, Alias) VALUES
  (23,'مکزیکو آبی'), (23,'مکزیکو قرمز'), (23,'مکزیکو طلایی'), (23,'مکزیکو نقره‌ای'), (23,'مکزیکو منتول'), (23,'مکزیکو اولترالایت'), (23,'مکزیکو مشکی'), (23,'مکزیکو سفید');
 INSERT INTO BrandAliases (BrandId, Alias) VALUES
  (24,'موند آبی'), (24,'موند قرمز'), (24,'موند طلایی'), (24,'موند نقره‌ای'), (24,'موند منتول'), (24,'موند اولترالایت'), (24,'موند مشکی'), (24,'موند سفید');
+
+-- ---------- Additional aliases from real-world testing (2026-07-12) ----------
+-- ESSE — Iranians commonly say "اسی"
+INSERT INTO BrandAliases (BrandId, Alias) VALUES (6,'اسی');
+-- Julio — Whisper (tiny model) consistently mis-hears this the same few ways
+INSERT INTO BrandAliases (BrandId, Alias) VALUES (21,'ازیلیو'), (21,'ازیو'), (21,'درلیو'), (21,'جولیو دری');
+-- Blake — a couple more phonetic variants
+INSERT INTO BrandAliases (BrandId, Alias) VALUES (15,'بلک'), (15,'بلیکه'), (15,'بلی');
+-- Cavallo — additional phonetic guesses (Persian speakers often double vowels)
+INSERT INTO BrandAliases (BrandId, Alias) VALUES (10,'کاوالوو'), (10,'کاواللو'), (10,'کاوارلو'), (10,'کاوالو دری');
+-- Forever — the short garbled form also seen
+INSERT INTO BrandAliases (BrandId, Alias) VALUES (22,'فورو'), (22,'فوراور دری');
