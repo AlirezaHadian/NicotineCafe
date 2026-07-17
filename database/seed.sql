@@ -1,203 +1,355 @@
--- ==========================================================
--- Nicotine Cafe — Seed data v2 (brand-only recognition)
--- Models are PLACEHOLDERS — edit real ones from the Admin screen.
--- ==========================================================
-
-INSERT INTO Brands (NameFa, NameEn) VALUES ('منچستر', 'Manchester');  -- 1
-INSERT INTO Brands (NameFa, NameEn) VALUES ('وینستون', 'Winston');  -- 2
-INSERT INTO Brands (NameFa, NameEn) VALUES ('سناتور', 'Senator');  -- 3
-INSERT INTO Brands (NameFa, NameEn) VALUES ('میلانو', 'Milano');  -- 4
-INSERT INTO Brands (NameFa, NameEn) VALUES ('جی‌تی‌ام', 'GTM');  -- 5
-INSERT INTO Brands (NameFa, NameEn) VALUES ('ایست', 'ESSE');  -- 6
-INSERT INTO Brands (NameFa, NameEn) VALUES ('فورمن', 'Forman');  -- 7
-INSERT INTO Brands (NameFa, NameEn) VALUES ('پرت', 'Perth');  -- 8
-INSERT INTO Brands (NameFa, NameEn) VALUES ('کاپیتان بلک', 'Captain Black');  -- 9
-INSERT INTO Brands (NameFa, NameEn) VALUES ('کاوالو', 'Cavallo');  -- 10
-INSERT INTO Brands (NameFa, NameEn) VALUES ('مونتانا', 'Montana');  -- 11
-INSERT INTO Brands (NameFa, NameEn) VALUES ('پال مال', 'Pall Mall');  -- 12
-INSERT INTO Brands (NameFa, NameEn) VALUES ('کنت', 'Kent');  -- 13
-INSERT INTO Brands (NameFa, NameEn) VALUES ('کمل', 'Camel');  -- 14
-INSERT INTO Brands (NameFa, NameEn) VALUES ('بلیک', 'Blake');  -- 15
-INSERT INTO Brands (NameFa, NameEn) VALUES ('بهمن', 'Bahman');  -- 16
-INSERT INTO Brands (NameFa, NameEn) VALUES ('بنس', 'Bens');  -- 17
-INSERT INTO Brands (NameFa, NameEn) VALUES ('ناپولی', 'Napoli');  -- 18
-INSERT INTO Brands (NameFa, NameEn) VALUES ('آریزونا', 'Arizona');  -- 19
-INSERT INTO Brands (NameFa, NameEn) VALUES ('مارلبرو', 'Marlboro');  -- 20
-INSERT INTO Brands (NameFa, NameEn) VALUES ('جولیو', 'Julio');  -- 21
-INSERT INTO Brands (NameFa, NameEn) VALUES ('فورور', 'Forever');  -- 22
-INSERT INTO Brands (NameFa, NameEn) VALUES ('مکزیکو', 'Maxico');  -- 23
-INSERT INTO Brands (NameFa, NameEn) VALUES ('موند', 'Mond');  -- 24
-
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (1,'منچستر'), (1,'من چستر'), (1,'منجستر');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (2,'ونستون'), (2,'وینسون'), (2,'وینستون'), (2,'وین استون'), (2,'وینستن'), (2,'بینستون'), (2,'وینستو'), (2,'وینستوم');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (3,'سناتور'), (3,'سنیتور'), (3,'سناطور');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (4,'میلانو'), (4,'میلان'), (4,'میلانوو');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (5,'جی تی ام'), (5,'جی‌تی‌ام'), (5,'GTM');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (6,'ایست'), (6,'اسه'), (6,'ایسه'), (6,'اس اس ای');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (7,'فورمن'), (7,'فرمن'), (7,'فورمان');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (8,'پرت'), (8,'پرث'), (8,'پورت');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (9,'کاپیتان بلک'), (9,'کاپیتان'), (9,'کاپیتن بلک'), (9,'کاپیتن'), (9,'کپیتان بلک'), (9,'کبیتان بلک'), (9,'کاپیتان بلاک');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (10,'کاوالو'), (10,'کاوالّو'), (10,'کاوالو سیگار');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (11,'مونتانا'), (11,'منتانا');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (12,'پال مال'), (12,'پالمال'), (12,'پال مالو');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (13,'کنت'), (13,'کنّت'), (13,'کِنت'), (13,'کنت سیگار'), (13,'کند'), (13,'کنط');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (14,'کمل'), (14,'کمال'), (14,'شتر'), (14,'کمبل'), (14,'کاملیا');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (15,'بلیک'), (15,'بلک'), (15,'بلیک سیگار');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (16,'بهمن'), (16,'به من'), (16,'بحمن'), (16,'باهمان'), (16,'با همان'), (16,'بامن'), (16,'بخمان'), (16,'بخمن'), (16,'برمان'), (16,'برمن');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (17,'بنس'), (17,'بنز'), (17,'بنّس');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (18,'ناپولی'), (18,'ناپلی'), (18,'ناپولی سیگار');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (19,'آریزونا'), (19,'اریزونا'), (19,'ارضونا');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (20,'مارلبرو'), (20,'مارلبورو'), (20,'مارلبرا'), (20,'ماربرو'), (20,'مارالبرو'), (20,'مارلبورا'), (20,'ماربو'), (20,'ماربر'), (20,'مالبرو'), (20,'مارورو'), (20,'مارور');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (21,'جولیو'), (21,'جولیو سیگار'), (21,'جولیا');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (22,'فورور'), (22,'فوراور'), (22,'فور اور');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (23,'مکزیکو'), (23,'مکسیکو'), (23,'ماکسیکو');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (24,'موند'), (24,'ماند'), (24,'موندو');
-
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (1,'Manchester Blue'), (1,'Manchester Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (2,'Winston Blue'), (2,'Winston Red'), (2,'Winston Silver'), (2,'Winston Menthol'), (2,'Winston Ultra Light');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (3,'Senator Blue'), (3,'Senator Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (4,'Milano Blue'), (4,'Milano Slims');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (5,'GTM Blue'), (5,'GTM Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (6,'ESSE Change'), (6,'ESSE Golden Leaf'), (6,'ESSE Blue');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (7,'Forman Blue'), (7,'Forman Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (8,'Perth Blue'), (8,'Perth Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (9,'Captain Black Original'), (9,'Captain Black Cherry');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (10,'Cavallo Blue'), (10,'Cavallo Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (11,'Montana Blue'), (11,'Montana Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (12,'Pall Mall Red'), (12,'Pall Mall Blue'), (12,'Pall Mall Menthol');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (13,'Kent Blue'), (13,'Kent Silver'), (13,'Kent Menthol'), (13,'Kent Ultra Light');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (14,'Camel Blue'), (14,'Camel White'), (14,'Camel Red'), (14,'Camel Menthol');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (15,'Blake Blue'), (15,'Blake Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (16,'Bahman Classic'), (16,'Bahman Extra');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (17,'Bens Blue'), (17,'Bens Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (18,'Napoli Blue'), (18,'Napoli Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (19,'Arizona Blue'), (19,'Arizona Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (20,'Marlboro Red'), (20,'Marlboro Gold'), (20,'Marlboro Silver'), (20,'Marlboro Ice Blast'), (20,'Marlboro Black Menthol');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (21,'Julio Blue'), (21,'Julio Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (22,'Forever Blue'), (22,'Forever Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (23,'Maxico Blue'), (23,'Maxico Red');
-INSERT INTO BrandModels (BrandId, ModelName) VALUES
- (24,'Mond Blue'), (24,'Mond Red');
-
--- ---------- Default settings (editable in WPF Admin) ----------
-INSERT INTO EngineSettings (Key, Value) VALUES ('model_size', 'tiny');
-INSERT INTO EngineSettings (Key, Value) VALUES ('beam_size', '1');
-INSERT INTO EngineSettings (Key, Value) VALUES ('speech_threshold', '0.09');
-INSERT INTO EngineSettings (Key, Value) VALUES ('silence_hangover_s', '0.55');
-INSERT INTO EngineSettings (Key, Value) VALUES ('min_utterance_s', '0.9');
-INSERT INTO EngineSettings (Key, Value) VALUES ('cpu_threads', '4');
-INSERT INTO EngineSettings (Key, Value) VALUES ('min_confidence', '0.60');
-INSERT INTO EngineSettings (Key, Value) VALUES ('show_model_list', 'true');  -- toggle the model-list panel on the display card
-
--- ---------- Compound variety aliases (برند + رنگ/تنوع) ----------
--- Customers almost always say brand + colour/variety together
--- ("وینستون آبی", "وینستون اولترالایت", ...). Registering these as
--- explicit aliases (in addition to the bare brand name) helps the
--- fuzzy matcher score them just as confidently as the bare brand.
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (1,'منچستر آبی'), (1,'منچستر قرمز'), (1,'منچستر طلایی'), (1,'منچستر نقره‌ای'), (1,'منچستر منتول'), (1,'منچستر اولترالایت'), (1,'منچستر مشکی'), (1,'منچستر سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (2,'وینستون آبی'), (2,'وینستون قرمز'), (2,'وینستون طلایی'), (2,'وینستون نقره‌ای'), (2,'وینستون منتول'), (2,'وینستون اولترالایت'), (2,'وینستون مشکی'), (2,'وینستون سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (3,'سناتور آبی'), (3,'سناتور قرمز'), (3,'سناتور طلایی'), (3,'سناتور نقره‌ای'), (3,'سناتور منتول'), (3,'سناتور اولترالایت'), (3,'سناتور مشکی'), (3,'سناتور سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (4,'میلانو آبی'), (4,'میلانو قرمز'), (4,'میلانو طلایی'), (4,'میلانو نقره‌ای'), (4,'میلانو منتول'), (4,'میلانو اولترالایت'), (4,'میلانو مشکی'), (4,'میلانو سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (5,'جی‌تی‌ام آبی'), (5,'جی‌تی‌ام قرمز'), (5,'جی‌تی‌ام طلایی'), (5,'جی‌تی‌ام نقره‌ای'), (5,'جی‌تی‌ام منتول'), (5,'جی‌تی‌ام اولترالایت'), (5,'جی‌تی‌ام مشکی'), (5,'جی‌تی‌ام سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (6,'ایست آبی'), (6,'ایست قرمز'), (6,'ایست طلایی'), (6,'ایست نقره‌ای'), (6,'ایست منتول'), (6,'ایست اولترالایت'), (6,'ایست مشکی'), (6,'ایست سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (7,'فورمن آبی'), (7,'فورمن قرمز'), (7,'فورمن طلایی'), (7,'فورمن نقره‌ای'), (7,'فورمن منتول'), (7,'فورمن اولترالایت'), (7,'فورمن مشکی'), (7,'فورمن سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (8,'پرت آبی'), (8,'پرت قرمز'), (8,'پرت طلایی'), (8,'پرت نقره‌ای'), (8,'پرت منتول'), (8,'پرت اولترالایت'), (8,'پرت مشکی'), (8,'پرت سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (9,'کاپیتان بلک آبی'), (9,'کاپیتان بلک قرمز'), (9,'کاپیتان بلک طلایی'), (9,'کاپیتان بلک نقره‌ای'), (9,'کاپیتان بلک منتول'), (9,'کاپیتان بلک اولترالایت'), (9,'کاپیتان بلک مشکی'), (9,'کاپیتان بلک سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (10,'کاوالو آبی'), (10,'کاوالو قرمز'), (10,'کاوالو طلایی'), (10,'کاوالو نقره‌ای'), (10,'کاوالو منتول'), (10,'کاوالو اولترالایت'), (10,'کاوالو مشکی'), (10,'کاوالو سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (11,'مونتانا آبی'), (11,'مونتانا قرمز'), (11,'مونتانا طلایی'), (11,'مونتانا نقره‌ای'), (11,'مونتانا منتول'), (11,'مونتانا اولترالایت'), (11,'مونتانا مشکی'), (11,'مونتانا سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (12,'پال مال آبی'), (12,'پال مال قرمز'), (12,'پال مال طلایی'), (12,'پال مال نقره‌ای'), (12,'پال مال منتول'), (12,'پال مال اولترالایت'), (12,'پال مال مشکی'), (12,'پال مال سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (13,'کنت آبی'), (13,'کنت قرمز'), (13,'کنت طلایی'), (13,'کنت نقره‌ای'), (13,'کنت منتول'), (13,'کنت اولترالایت'), (13,'کنت مشکی'), (13,'کنت سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (14,'کمل آبی'), (14,'کمل قرمز'), (14,'کمل طلایی'), (14,'کمل نقره‌ای'), (14,'کمل منتول'), (14,'کمل اولترالایت'), (14,'کمل مشکی'), (14,'کمل سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (15,'بلیک آبی'), (15,'بلیک قرمز'), (15,'بلیک طلایی'), (15,'بلیک نقره‌ای'), (15,'بلیک منتول'), (15,'بلیک اولترالایت'), (15,'بلیک مشکی'), (15,'بلیک سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (16,'بهمن آبی'), (16,'بهمن قرمز'), (16,'بهمن طلایی'), (16,'بهمن نقره‌ای'), (16,'بهمن منتول'), (16,'بهمن اولترالایت'), (16,'بهمن مشکی'), (16,'بهمن سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (17,'بنس آبی'), (17,'بنس قرمز'), (17,'بنس طلایی'), (17,'بنس نقره‌ای'), (17,'بنس منتول'), (17,'بنس اولترالایت'), (17,'بنس مشکی'), (17,'بنس سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (18,'ناپولی آبی'), (18,'ناپولی قرمز'), (18,'ناپولی طلایی'), (18,'ناپولی نقره‌ای'), (18,'ناپولی منتول'), (18,'ناپولی اولترالایت'), (18,'ناپولی مشکی'), (18,'ناپولی سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (19,'آریزونا آبی'), (19,'آریزونا قرمز'), (19,'آریزونا طلایی'), (19,'آریزونا نقره‌ای'), (19,'آریزونا منتول'), (19,'آریزونا اولترالایت'), (19,'آریزونا مشکی'), (19,'آریزونا سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (20,'مارلبرو آبی'), (20,'مارلبرو قرمز'), (20,'مارلبرو طلایی'), (20,'مارلبرو نقره‌ای'), (20,'مارلبرو منتول'), (20,'مارلبرو اولترالایت'), (20,'مارلبرو مشکی'), (20,'مارلبرو سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (21,'جولیو آبی'), (21,'جولیو قرمز'), (21,'جولیو طلایی'), (21,'جولیو نقره‌ای'), (21,'جولیو منتول'), (21,'جولیو اولترالایت'), (21,'جولیو مشکی'), (21,'جولیو سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (22,'فورور آبی'), (22,'فورور قرمز'), (22,'فورور طلایی'), (22,'فورور نقره‌ای'), (22,'فورور منتول'), (22,'فورور اولترالایت'), (22,'فورور مشکی'), (22,'فورور سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (23,'مکزیکو آبی'), (23,'مکزیکو قرمز'), (23,'مکزیکو طلایی'), (23,'مکزیکو نقره‌ای'), (23,'مکزیکو منتول'), (23,'مکزیکو اولترالایت'), (23,'مکزیکو مشکی'), (23,'مکزیکو سفید');
-INSERT INTO BrandAliases (BrandId, Alias) VALUES
- (24,'موند آبی'), (24,'موند قرمز'), (24,'موند طلایی'), (24,'موند نقره‌ای'), (24,'موند منتول'), (24,'موند اولترالایت'), (24,'موند مشکی'), (24,'موند سفید');
-
--- ---------- Additional aliases from real-world testing (2026-07-12) ----------
--- ESSE — Iranians commonly say "اسی"
-INSERT INTO BrandAliases (BrandId, Alias) VALUES (6,'اسی');
--- Julio — Whisper (tiny model) consistently mis-hears this the same few ways
-INSERT INTO BrandAliases (BrandId, Alias) VALUES (21,'ازیلیو'), (21,'ازیو'), (21,'درلیو'), (21,'جولیو دری');
--- Blake — a couple more phonetic variants
-INSERT INTO BrandAliases (BrandId, Alias) VALUES (15,'بلک'), (15,'بلیکه'), (15,'بلی');
--- Cavallo — additional phonetic guesses (Persian speakers often double vowels)
-INSERT INTO BrandAliases (BrandId, Alias) VALUES (10,'کاوالوو'), (10,'کاواللو'), (10,'کاوارلو'), (10,'کاوالو دری');
--- Forever — the short garbled form also seen
-INSERT INTO BrandAliases (BrandId, Alias) VALUES (22,'فورو'), (22,'فوراور دری');
+-- Regenerated seed data (50 brands) --
+DELETE FROM BrandAliases; DELETE FROM BrandModels; DELETE FROM Brands;
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (1,'منچستر','Manchester',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (2,'وینستون','Winston',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (3,'سناتور','Senator',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (4,'میلانو','Milano',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (5,'جی‌تی‌ام','GTM',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (6,'ایست','ESSE',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (7,'فورمن','Forman',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (8,'پرت','Perth',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (9,'کاپیتان بلک','Captain Black',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (10,'کاوالو','Cavallo',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (11,'مونتانا','Montana',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (12,'پال مال','Pall Mall',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (13,'کنت','Kent',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (14,'کمل','Camel',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (15,'بلیک','Blake',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (16,'بهمن','Bahman',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (17,'بنس','Bens',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (18,'ناپولی','Napoli',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (19,'آریزونا','Arizona',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (20,'مارلبرو','Marlboro',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (21,'جولیو','Julio',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (22,'فورور','Forever',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (23,'مکزیکو','Maxico',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (24,'موند','Mond',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (25,'پارلیامنت','Parliament',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (26,'رویال','Royal',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (27,'داناهیل','Dunhill',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (28,'ال‌ام','L&M',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (29,'لاکی استرایک','Lucky Strike',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (30,'چاپمن','Chapman',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (31,'مور','More',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (32,'بنتلی','Bentley',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (33,'ویکتوری','Victory',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (34,'میکادو','Mikado',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (35,'داویدوف','Davidoff',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (36,'کینگ‌دام','Kingdom',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (37,'سوبرانی','Sobranie',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (38,'فیلیپ موریس','Philip Morris',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (39,'روتمنز','Rothmans',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (40,'ویسروی','Viceroy',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (41,'پرزیدنت','President',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (42,'پیتر استایوسانت','Peter Stuyvesant',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (43,'گلوآز','Gauloises',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (44,'کریون ای','Craven A',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (45,'تیر','Tir',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (46,'فروردین','Farvardin',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (47,'هما','Homa',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (48,'زیکا','Zika',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (49,'وست','West',NULL,1);
+INSERT INTO Brands (Id,NameFa,NameEn,ImagePath,IsActive) VALUES (50,'وینزور','Windsor',NULL,1);
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (1,1,'منچستر');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (2,1,'من چستر');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (3,1,'منجستر');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (4,2,'ونستون');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (5,2,'وینسون');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (6,2,'وینستون');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (7,2,'وین استون');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (8,2,'وینستن');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (9,2,'بینستون');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (10,2,'وینستو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (11,2,'وینستوم');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (12,3,'سناتور');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (13,3,'سنیتور');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (14,3,'سناطور');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (15,4,'میلانو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (16,4,'میلان');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (17,4,'میلانوو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (18,5,'جی تی ام');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (19,5,'جی‌تی‌ام');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (20,5,'GTM');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (21,6,'ایست');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (22,6,'اسه');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (23,6,'ایسه');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (24,6,'اس اس ای');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (25,7,'فورمن');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (26,7,'فرمن');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (27,7,'فورمان');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (28,8,'پرت');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (29,8,'پرث');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (30,8,'پورت');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (31,9,'کاپیتان بلک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (32,9,'کاپیتان');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (33,9,'کاپیتن بلک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (34,9,'کاپیتن');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (35,9,'کپیتان بلک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (36,9,'کبیتان بلک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (37,9,'کاپیتان بلاک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (38,10,'کاوالو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (39,10,'کاوالّو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (41,11,'مونتانا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (42,11,'منتانا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (43,12,'پال مال');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (44,12,'پالمال');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (45,12,'پال مالو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (46,13,'کنت');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (47,13,'کنّت');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (48,13,'کِنت');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (50,13,'کند');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (51,13,'کنط');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (52,14,'کمل');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (53,14,'کمال');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (54,14,'شتر');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (55,14,'کمبل');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (56,14,'کاملیا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (57,15,'بلیک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (59,16,'بهمن');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (60,16,'به من');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (61,16,'بحمن');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (62,16,'باهمان');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (63,16,'با همان');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (64,16,'بامن');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (65,16,'بخمان');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (66,16,'بخمن');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (67,16,'برمان');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (68,16,'برمن');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (69,17,'بنس');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (70,17,'بنز');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (71,17,'بنّس');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (72,18,'ناپولی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (73,18,'ناپلی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (75,19,'آریزونا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (76,19,'اریزونا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (77,19,'ارضونا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (78,20,'مارلبرو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (79,20,'مارلبورو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (80,20,'مارلبرا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (81,20,'ماربرو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (82,20,'مارالبرو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (83,20,'مارلبورا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (84,20,'ماربو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (85,20,'ماربر');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (86,20,'مالبرو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (87,20,'مارورو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (88,20,'مارور');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (89,21,'جولیو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (91,21,'جولیا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (92,22,'فورور');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (93,22,'فوراور');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (94,22,'فور اور');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (95,23,'مکزیکو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (96,23,'مکسیکو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (97,23,'ماکسیکو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (98,24,'موند');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (99,24,'ماند');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (100,24,'موندو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (293,6,'اسی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (294,21,'ازیلیو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (295,21,'ازیو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (296,21,'درلیو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (298,15,'بلیکه');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (299,15,'بلی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (300,10,'کاوالوو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (301,10,'کاواللو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (302,10,'کاوارلو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (304,22,'فورو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (306,9,'کامتن بلک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (307,9,'کامتن بل');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (308,9,'کاپتن بلک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (309,9,'کبتن بلک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (310,9,'کاپیتان بل');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (311,9,'کامتن بلاک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (312,5,'دیتی ام');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (313,23,'میکسی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (314,25,'پارلیامنت');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (315,25,'پارلمان');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (316,25,'پارلمنت');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (317,25,'پارلیمان');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (318,26,'رویال');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (319,26,'رویل');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (320,26,'رویالو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (321,26,'رویا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (322,27,'داناهیل');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (323,27,'دان هیل');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (324,27,'دنهیل');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (325,27,'دانهیل');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (326,28,'ال ام');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (327,28,'الم');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (328,28,'ال‌ام');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (329,28,'ال اند ام');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (330,29,'لاکی استرایک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (331,29,'لاکی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (332,29,'لاکی استریک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (333,29,'لاکیستریک');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (334,30,'چاپمن');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (335,30,'چپمن');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (336,30,'چاپمین');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (337,31,'مور');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (338,31,'موره');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (339,31,'موور');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (340,32,'بنتلی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (341,32,'بینتلی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (342,32,'بنتلای');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (343,33,'ویکتوری');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (344,33,'ویکتری');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (345,33,'ویکتوری‌');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (346,34,'میکادو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (347,34,'میکاردو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (348,34,'میگادو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (349,35,'داویدوف');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (350,35,'دیویدوف');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (351,35,'داویداف');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (352,36,'کینگدام');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (353,36,'کینگ دام');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (354,36,'کینگدوم');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (355,37,'سوبرانی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (356,37,'سابرانی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (357,37,'سوبرانیه');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (358,38,'فیلیپ موریس');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (359,38,'فیلیپ موریز');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (360,38,'فیلیپ مورس');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (361,39,'روتمنز');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (362,39,'راتمنز');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (363,39,'روتمن');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (364,40,'ویسروی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (365,40,'ویسروا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (366,40,'وایسروی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (367,41,'پرزیدنت');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (368,41,'پرزیدنط');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (369,41,'پرزیدند');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (370,42,'پیتر استایوسانت');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (371,42,'پیتراستایوسانت');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (372,42,'پیتر استویوسنت');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (373,43,'گلوآز');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (374,43,'گلوواز');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (375,43,'گولوا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (376,44,'کریون ای');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (377,44,'کریوونای');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (378,44,'کریون آ');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (379,45,'تیر');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (380,45,'تیرو');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (381,46,'فروردین');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (382,46,'فروردینی');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (383,47,'هما');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (384,47,'حما');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (385,48,'زیکا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (386,48,'زیگا');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (387,49,'وست');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (388,49,'وس');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (389,50,'وینزور');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (390,50,'وینسور');
+INSERT INTO BrandAliases (Id,BrandId,Alias) VALUES (391,50,'وایندزور');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (1,1,'Manchester Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (2,1,'Manchester Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (3,2,'Winston Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (4,2,'Winston Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (5,2,'Winston Silver');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (6,2,'Winston Menthol');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (7,2,'Winston Ultra Light');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (8,3,'Senator Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (9,3,'Senator Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (10,4,'Milano Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (11,4,'Milano Slims');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (12,5,'GTM Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (13,5,'GTM Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (14,6,'ESSE Change');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (15,6,'ESSE Golden Leaf');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (16,6,'ESSE Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (17,7,'Forman Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (18,7,'Forman Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (19,8,'Perth Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (20,8,'Perth Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (21,9,'Captain Black Original');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (22,9,'Captain Black Cherry');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (23,10,'Cavallo Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (24,10,'Cavallo Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (25,11,'Montana Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (26,11,'Montana Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (27,12,'Pall Mall Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (28,12,'Pall Mall Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (29,12,'Pall Mall Menthol');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (30,13,'Kent Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (31,13,'Kent Silver');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (32,13,'Kent Menthol');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (33,13,'Kent Ultra Light');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (34,14,'Camel Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (35,14,'Camel White');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (36,14,'Camel Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (37,14,'Camel Menthol');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (38,15,'Blake Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (39,15,'Blake Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (40,16,'Bahman Classic');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (41,16,'Bahman Extra');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (42,17,'Bens Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (43,17,'Bens Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (44,18,'Napoli Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (45,18,'Napoli Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (46,19,'Arizona Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (47,19,'Arizona Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (48,20,'Marlboro Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (49,20,'Marlboro Gold');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (50,20,'Marlboro Silver');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (51,20,'Marlboro Ice Blast');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (52,20,'Marlboro Black Menthol');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (53,21,'Julio Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (54,21,'Julio Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (55,22,'Forever Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (56,22,'Forever Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (57,23,'Maxico Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (58,23,'Maxico Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (59,24,'Mond Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (60,24,'Mond Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (61,25,'Parliament Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (62,25,'Parliament Silver');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (63,26,'Royal Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (64,26,'Royal Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (65,27,'Dunhill Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (66,27,'Dunhill Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (67,28,'L&M Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (68,28,'L&M Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (69,29,'Lucky Strike Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (70,29,'Lucky Strike Silver');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (71,30,'Chapman Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (72,30,'Chapman Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (73,31,'More Brown');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (74,31,'More Menthol');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (75,32,'Bentley Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (76,32,'Bentley Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (77,33,'Victory Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (78,33,'Victory Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (79,34,'Mikado Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (80,34,'Mikado Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (81,35,'Davidoff Gold');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (82,35,'Davidoff Silver');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (83,36,'Kingdom Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (84,36,'Kingdom Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (85,37,'Sobranie Black Russian');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (86,37,'Sobranie Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (87,38,'Philip Morris Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (88,38,'Philip Morris Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (89,39,'Rothmans Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (90,39,'Rothmans Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (91,40,'Viceroy Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (92,40,'Viceroy Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (93,41,'President Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (94,41,'President Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (95,42,'Peter Stuyvesant Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (96,42,'Peter Stuyvesant Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (97,43,'Gauloises Blondes');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (98,43,'Gauloises Brunes');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (99,44,'Craven A Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (100,44,'Craven A Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (101,45,'تیر متوسط');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (102,45,'تیر فول فلیور');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (103,46,'فروردین معمولی');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (104,46,'فروردین اکسترا');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (105,47,'هما معمولی');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (106,47,'هما اکسترا');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (107,48,'زیکا معمولی');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (108,48,'زیکا لایت');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (109,49,'West Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (110,49,'West Red');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (111,50,'Windsor Blue');
+INSERT INTO BrandModels (Id,BrandId,ModelName) VALUES (112,50,'Windsor Red');

@@ -111,9 +111,13 @@ class WhisperEngine:
         Returns True when the text looks like a Whisper repetition loop.
 
         Three heuristics, in order:
-        1. Cyclic n-gram repetition — catches multi-word loops like
-           "آبی قرمز سفید آبی قرمز سفید…" (cycle length 1–6 words).
-        2. Single dominant word — catches "کامل کامل کامل…".
+        1. Cyclic n-gram repetition — catches multi-word loops ANYWHERE in
+           the text, e.g. "وینستون مارلبرو بهمن کنت پرلبرو بهمن کنت پرلبرو…"
+           (cycle length 1–6 words, loop may start after a clean prefix —
+           it does NOT need to start at word 0).
+        2. Repeated-word coverage — catches "کامل کامل کامل…" as well as
+           cases where two or three words alternate/repeat enough to fill
+           most of the text even without one single word dominating.
         3. Absurd total length — a short utterance should never produce
            120+ words.
         """
@@ -122,26 +126,46 @@ class WhisperEngine:
         if n == 0:
             return False
 
-        # --- Heuristic 1: cyclic repetition of length 1..6 ---
+        # --- Heuristic 1: cyclic repetition of length 1..6, starting ANYWHERE ---
         max_cycle = min(6, n // 2)
-        for cycle_len in range(1, max_cycle + 1):
-            cycle = words[:cycle_len]
-            repeats = 0
-            i = 0
-            while i + cycle_len <= n and words[i:i + cycle_len] == cycle:
-                repeats += 1
-                i += cycle_len
-            covered = repeats * cycle_len
-            # 3+ full repeats covering most of the text → loop
-            if repeats >= 3 and covered / n > 0.6:
+        for start in range(0, n - 1):
+            for cycle_len in range(1, max_cycle + 1):
+                if start + cycle_len * 2 > n:
+                    continue
+                cycle = words[start:start + cycle_len]
+                repeats = 0
+                i = start
+                while i + cycle_len <= n and words[i:i + cycle_len] == cycle:
+                    repeats += 1
+                    i += cycle_len
+                covered = repeats * cycle_len
+                # 3+ full repeats covering a good chunk of the text → loop,
+                # even if it doesn't start at word 0 (a clean prefix like
+                # "وینستون مارلبرو" followed by a loop still counts).
+                if repeats >= 3 and covered / n > 0.4:
+                    return True
+                # Only 2 full repeats, but they cover almost the entire
+                # remaining text (e.g. an 8-word utterance that is really
+                # just a 3-word phrase said twice) → also a loop.
+                if repeats >= 2 and covered / n > 0.7:
+                    return True
+
+        # --- Heuristic 1b: whole utterance is the same short phrase said
+        # twice back-to-back (e.g. "داناهیل داناهیل") — too short for the
+        # cycle scan above to reach repeats>=2 with covered/n>0.7 when
+        # n is small, so check it directly.
+        if n >= 2 and n % 2 == 0:
+            half = n // 2
+            if words[:half] == words[half:]:
                 return True
 
-        # --- Heuristic 2: single dominant word ---
-        # Requires an actual minimum repeat count (3+) so short, normal
-        # sentences (e.g. 2-word utterances) aren't falsely flagged just
-        # because one word happens to be 1-of-2.
-        most_common_count = Counter(words).most_common(1)[0][1]
-        if most_common_count >= 3 and most_common_count / n > 0.35:
+        # --- Heuristic 2: repeated-word coverage ---
+        # Sum of the top-2 most common words' counts vs. total length —
+        # catches loops built from 2-3 alternating brand words where no
+        # single word individually clears an old, stricter threshold.
+        counts = Counter(words).most_common(2)
+        top_count = sum(c for _, c in counts)
+        if counts and counts[0][1] >= 3 and top_count / n > 0.5:
             return True
 
         # --- Heuristic 3: absurd length ---

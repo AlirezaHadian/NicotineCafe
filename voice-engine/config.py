@@ -15,11 +15,14 @@ ALL_MODEL_SIZES: list[ModelSize] = ["tiny", "base", "small"]
 @dataclass
 class WhisperConfig:
     """Settings passed directly to faster-whisper."""
-    model_size: ModelSize = "tiny"   # tiny = ~3-5x faster than base on CPU; small accuracy drop.
-                                      # If accuracy matters more than speed on capable hardware,
-                                      # override with --model base or --model small.
+    model_size: ModelSize = "small"   # accuracy-first default (per current testing).
+                                      # tiny = ~3-5x faster than base on CPU but noticeably
+                                      # worse on accented/short Persian speech. Switch back
+                                      # to "tiny" (via EngineSettings, no code change needed)
+                                      # if latency ever becomes the priority instead.
     language: str = "fa"
-    beam_size: int = 1     # 1 = greedy decoding, much faster; raise to 5 for max accuracy if speed allows
+    beam_size: int = 5     # higher beam = better accuracy for a real but bounded speed
+                            # cost. Also overridable at runtime via EngineSettings.
     best_of: int = 1       # only affects temperature>0 sampling — unused while temperature=0.0
     condition_on_previous_text: bool = False
     temperature: float = 0.0
@@ -38,8 +41,14 @@ class WhisperConfig:
                               # through it for several seconds before we catch it
     vad_min_silence_ms: int = 300
 
+    # IMPORTANT: keep this as domain *context*, not an enumerable list of
+    # exact brand names. faster-whisper tends to echo initial_prompt tokens
+    # verbatim during silent/noisy segments — the previous prompt (a bare
+    # word-list of brand names, including some not even in the catalog)
+    # was the direct cause of hallucinated output like "وینستون مارلبرو
+    # بهمن کنت پرلبرو بهمن کنت..." and "داناهیل داناهیل داناهیل".
     initial_prompt: str = (
-        "وینستون مارلبرو بهمن کنت پارلیامنت ال ام رویال داناهیل کامل اولترالایت"
+        "مکالمه مشتری با فروشنده در یک مغازه دخانیات درباره نام برند سیگار."
     )
 
 
@@ -62,8 +71,8 @@ class MatcherConfig:
     # Brand names (وینستون، مارلبرو) are distinctive → this is the only
     # threshold that matters now; variant/model matching was removed.
     fuzzy_threshold: float = 76.0
-    min_confidence: float = 0.60  # filters out low-confidence noise matches
-                                   # (garbled/unrelated speech incorrectly mapped to a brand)
+    min_confidence: float = 0.65  # was 0.60 — a bit stricter now that alias
+                                   # collisions (e.g. Blake vs Captain Black) are fixed
 
 
 @dataclass
