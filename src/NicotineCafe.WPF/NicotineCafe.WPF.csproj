@@ -25,6 +25,13 @@
     <Content Include="Assets\Images\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <!-- Idle attract-loop demo video (see MainWindow.xaml DemoVideoElement).
+         Drop your file at Assets\Videos\demo.mp4 — it's just a normal
+         Content asset, no other wiring needed. Harmless if absent (the
+         window handles a missing/failed video gracefully). -->
+    <Content Include="Assets\Videos\**\*.*" Condition="Exists('Assets\Videos')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <!-- Shared SQLite DB: copied to bin\...\Data\nicotinecafe.db -->

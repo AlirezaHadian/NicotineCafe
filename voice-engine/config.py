@@ -8,20 +8,21 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
-ModelSize = Literal["tiny", "base", "small"]
-ALL_MODEL_SIZES: list[ModelSize] = ["tiny", "base", "small"]
+ModelSize = Literal["tiny", "base", "small", "medium", "large-v2", "large-v3"]
+ALL_MODEL_SIZES: list[ModelSize] = ["tiny", "base", "small", "medium", "large-v2", "large-v3"]
 
 
 @dataclass
 class WhisperConfig:
     """Settings passed directly to faster-whisper."""
-    model_size: ModelSize = "small"   # accuracy-first default (per current testing).
-                                      # tiny = ~3-5x faster than base on CPU but noticeably
-                                      # worse on accented/short Persian speech. Switch back
-                                      # to "tiny" (via EngineSettings, no code change needed)
-                                      # if latency ever becomes the priority instead.
+    model_size: ModelSize = "medium"  # accuracy-first (per explicit request — speed is not
+                                      # a priority right now). NOTE: this default is only used
+                                      # when the EngineSettings table has no 'model_size' row;
+                                      # in practice the DB row always wins (see EngineSettings
+                                      # loading in server.py) — change it from the Admin screen,
+                                      # not here, if it needs to change later.
     language: str = "fa"
-    beam_size: int = 5     # higher beam = better accuracy for a real but bounded speed
+    beam_size: int = 8      # higher beam = better accuracy for a real but bounded speed
                             # cost. Also overridable at runtime via EngineSettings.
     best_of: int = 1       # only affects temperature>0 sampling — unused while temperature=0.0
     condition_on_previous_text: bool = False
@@ -70,7 +71,7 @@ class MatcherConfig:
     """Fuzzy matching thresholds — brand-only recognition."""
     # Brand names (وینستون، مارلبرو) are distinctive → this is the only
     # threshold that matters now; variant/model matching was removed.
-    fuzzy_threshold: float = 76.0
+    fuzzy_threshold: float = 82.0  # raised from 76 — accuracy over recall is the priority now
     min_confidence: float = 0.65  # was 0.60 — a bit stricter now that alias
                                    # collisions (e.g. Blake vs Captain Black) are fixed
 

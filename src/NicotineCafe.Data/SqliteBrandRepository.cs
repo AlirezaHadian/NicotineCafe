@@ -18,7 +18,7 @@ public sealed class SqliteBrandRepository : IBrandRepository
     {
         using var conn = _factory.Create();
         var rows = await conn.QueryAsync<Brand>(
-            "SELECT Id, NameFa, NameEn, ImagePath, IsActive FROM Brands WHERE IsActive = 1 ORDER BY NameFa");
+            "SELECT Id, NameFa, NameEn, ImagePath, VideoPath, IsActive FROM Brands WHERE IsActive = 1 ORDER BY NameFa");
         return rows.ToList();
     }
 
@@ -26,14 +26,14 @@ public sealed class SqliteBrandRepository : IBrandRepository
     {
         using var conn = _factory.Create();
         return await conn.QuerySingleOrDefaultAsync<Brand>(
-            "SELECT Id, NameFa, NameEn, ImagePath, IsActive FROM Brands WHERE Id = @id", new { id });
+            "SELECT Id, NameFa, NameEn, ImagePath, VideoPath, IsActive FROM Brands WHERE Id = @id", new { id });
     }
 
     public async Task<int> AddBrandAsync(Brand brand, CancellationToken ct = default)
     {
         using var conn = _factory.Create();
         const string sql = """
-            INSERT INTO Brands (NameFa, NameEn, ImagePath, IsActive) VALUES (@NameFa, @NameEn, @ImagePath, 1);
+            INSERT INTO Brands (NameFa, NameEn, ImagePath, VideoPath, IsActive) VALUES (@NameFa, @NameEn, @ImagePath, @VideoPath, 1);
             SELECT last_insert_rowid();
             """;
         return await conn.ExecuteScalarAsync<int>(sql, brand);
@@ -43,7 +43,7 @@ public sealed class SqliteBrandRepository : IBrandRepository
     {
         using var conn = _factory.Create();
         const string sql = """
-            UPDATE Brands SET NameFa = @NameFa, NameEn = @NameEn, ImagePath = @ImagePath, IsActive = @IsActive
+            UPDATE Brands SET NameFa = @NameFa, NameEn = @NameEn, ImagePath = @ImagePath, VideoPath = @VideoPath, IsActive = @IsActive
             WHERE Id = @Id
             """;
         await conn.ExecuteAsync(sql, brand);
@@ -59,7 +59,7 @@ public sealed class SqliteBrandRepository : IBrandRepository
     {
         using var conn = _factory.Create();
         var brand = await conn.QuerySingleOrDefaultAsync(
-            "SELECT Id, NameFa, NameEn, ImagePath FROM Brands WHERE Id = @brandId AND IsActive = 1",
+            "SELECT Id, NameFa, NameEn, ImagePath, VideoPath FROM Brands WHERE Id = @brandId AND IsActive = 1",
             new { brandId });
         if (brand is null) return null;
 
@@ -73,6 +73,7 @@ public sealed class SqliteBrandRepository : IBrandRepository
             NameFa = (string)brand.NameFa,
             NameEn = (string)brand.NameEn,
             ImagePath = (string?)brand.ImagePath,
+            VideoPath = (string?)brand.VideoPath,
             ModelNames = modelNames.ToList(),
         };
     }

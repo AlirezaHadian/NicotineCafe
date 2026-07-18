@@ -12,6 +12,7 @@ public sealed class BrandDisplay
     public string NameFa { get; init; } = string.Empty;
     public string NameEn { get; init; } = string.Empty;
     public string? ImagePath { get; init; }
+    public string? VideoPath { get; init; } // optional demo video, looped after 1 min on the display card
     public IReadOnlyList<string> ModelNames { get; init; } = Array.Empty<string>();
 }
 

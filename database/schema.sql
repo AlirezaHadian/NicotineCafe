@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS Brands (
     NameFa          TEXT NOT NULL,
     NameEn          TEXT NOT NULL,
     ImagePath       TEXT NULL,          -- brand-level image (shown on the display card)
+    VideoPath       TEXT NULL,          -- optional per-brand demo video (looped after 1 min on screen)
     IsActive        INTEGER NOT NULL DEFAULT 1
 );
 

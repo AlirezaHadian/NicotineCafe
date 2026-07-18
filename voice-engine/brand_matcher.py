@@ -25,6 +25,27 @@ except ImportError as e:
 from normalizer import PersianNormalizer
 from phonetic import PhoneticNormalizer
 
+# ---------------------------------------------------------------------------
+# Known ambiguous brand pair: کاپیتان بلک (Captain Black) vs بلیک (Blake).
+#
+# Root cause: PhoneticNormalizer.skeleton() drops long vowels (ا و ی), so
+# "بلک" and "بلیک" collapse to the exact same skeleton ("بلک"). When the ASR
+# output is noisy, the per-token/bigram fuzzy matcher can end up picking
+# whichever of the two happens to score a hair higher — regardless of
+# whether a "کاپیتان" prefix was actually said. This caused real
+# misclassifications in both directions (e.g. "اپتان بلعچ مخون" — clearly
+# Captain Black — got matched to Blake instead).
+#
+# Fix: after the normal fuzzy match, check independently whether a
+# "کاپیتان"-like token exists anywhere in the sentence, and use that to
+# force the correct brand. This is decoupled from the ambiguous
+# alias/skeleton scoring entirely.
+# ---------------------------------------------------------------------------
+_CAPTAIN_BLACK_NAME = "کاپیتان بلک"
+_BLAKE_NAME = "بلیک"
+_CAPTAIN_SKELETON_HINT = "کپتن"
+_CAPTAIN_HINT_THRESHOLD = 50.0
+
 # Words that are never brand names — skip in per-token matching
 _STOPWORDS: frozenset[str] = frozenset({
     "یه", "یک", "یو", "یتا",
@@ -125,6 +146,15 @@ class BrandMatcher:
         if result is None:
             return None, 0.0, None
         matched_form, raw_score, idx = result
+        # Extra-strict bar for very short index keys: short strings
+        # (<=4 chars) are prone to deceptively high fuzzy/partial-ratio
+        # scores against unrelated fragments in noisy ASR output — e.g.
+        # جولیو's short alias "ازیو" partial-matching an unrelated filler
+        # fragment "ازی" and winning over the real, longer وینستون match
+        # elsewhere in the same sentence. Require near-exact confidence
+        # before trusting a short key.
+        if len(matched_form) <= 6:
+            thr = max(thr, 92.0)
         if raw_score < thr:
             return None, 0.0, None
         return index[idx][1], raw_score / 100.0, matched_form
@@ -159,6 +189,22 @@ class BrandMatcher:
                     best = cand
         return best
 
+    def _has_captain_hint(self, text: str) -> bool:
+        """
+        True if any token in the sentence phonetically resembles «کاپیتان»
+        (covers the observed misheard forms: کاپیتن، کپیتان، کبیتان، اپتان،
+        عبطان، کاپتن، کبتن، کامتن، ...) — used to disambiguate
+        کاپیتان بلک vs بلیک, which are otherwise indistinguishable at the
+        skeleton level (see module docstring above).
+        """
+        for tok in text.split():
+            if len(tok) < 3 or tok in _STOPWORDS:
+                continue
+            sk = self._phon.skeleton(tok)
+            if fuzz.ratio(sk, _CAPTAIN_SKELETON_HINT) >= _CAPTAIN_HINT_THRESHOLD:
+                return True
+        return False
+
     def match(self, text: str) -> BrandMatch:
         """
         Find the best brand using per-token + bigram matching only.
@@ -171,6 +217,15 @@ class BrandMatcher:
             return BrandMatch(brand=None, score=0.0, matched_alias=None)
 
         brand, score, alias = self._match_tokens(text)
+
+        # Captain Black / Blake disambiguation — see module docstring.
+        if brand in (_CAPTAIN_BLACK_NAME, _BLAKE_NAME):
+            captain_hint = self._has_captain_hint(text)
+            if captain_hint and brand == _BLAKE_NAME:
+                brand = _CAPTAIN_BLACK_NAME
+            elif not captain_hint and brand == _CAPTAIN_BLACK_NAME:
+                brand = _BLAKE_NAME
+
         return BrandMatch(brand=brand, score=score, matched_alias=alias)
 
     @property

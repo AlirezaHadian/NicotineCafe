@@ -6,6 +6,13 @@
         Background="{DynamicResource BgGradientBrush}"
         FlowDirection="RightToLeft" FontFamily="{DynamicResource FontBody}">
 
+    <Window.Resources>
+        <Storyboard x:Key="ProcessingPulseStoryboard" RepeatBehavior="Forever">
+            <DoubleAnimation Storyboard.TargetName="ProcessingDot" Storyboard.TargetProperty="Opacity"
+                             From="1" To="0.25" Duration="0:0:0.6" AutoReverse="True" />
+        </Storyboard>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -68,11 +75,45 @@
                  of models underneath (toggle: ShowModelList), no specs. -->
             <Border x:Name="ProductCard" MaxWidth="1120" Padding="56"
                     Background="{DynamicResource PanelGradientBrush}"
-                    BorderBrush="{DynamicResource BorderBrush2}" BorderThickness="1"
+                    BorderBrush="{DynamicResource AccentGoldBrush}" BorderThickness="1.5"
                     CornerRadius="28" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    RenderTransformOrigin="0.5,0.5"
                     Visibility="{Binding IsProductVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Border.RenderTransform>
+                    <ScaleTransform x:Name="ProductCardScale" ScaleX="1" ScaleY="1" />
+                </Border.RenderTransform>
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsProductVisible}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)"
+                                                From="0.94" To="1" Duration="0:0:0.28">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation
+                                                Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)"
+                                                From="0.94" To="1" Duration="0:0:0.28">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                From="0" To="1" Duration="0:0:0.32" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="70" ShadowDepth="0" Opacity="0.55" Color="#000000" />
+                    <DropShadowEffect BlurRadius="80" ShadowDepth="0" Opacity="0.35" Color="#D9B25C" />
                 </Border.Effect>
 
                 <Grid>
@@ -91,6 +132,8 @@
 
                     <!-- Details -->
                     <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                        <Border Width="46" Height="4" CornerRadius="2" HorizontalAlignment="Right"
+                                Background="{DynamicResource GoldGradientBrush}" Margin="0,0,0,18" />
                         <TextBlock Text="{Binding CurrentBrand.NameFa}" Style="{StaticResource TitleTextStyle}" />
                         <TextBlock Text="{Binding CurrentBrand.NameEn}" Style="{StaticResource SubTitleTextStyle}"
                                    FlowDirection="LeftToRight" HorizontalAlignment="Right" Margin="0,6,0,36" />
@@ -126,6 +169,59 @@
                     Visibility="{Binding IsProductVisible, Converter={StaticResource BoolToVisibilityConverter}}"
                     HorizontalAlignment="Right" VerticalAlignment="Top"
                     Margin="0,80,80,0" Content="✕" FontSize="16" />
+
+            <!-- "Processing" pill — visible in EVERY state (idle screen OR
+                 on top of an already-showing brand card). Previously this
+                 feedback only reached the idle screen's status text, so a
+                 customer speaking while a brand card was up got no
+                 indication anything was happening at all. -->
+            <Border Style="{StaticResource ProcessingPillStyle}"
+                    Visibility="{Binding IsProcessing, Converter={StaticResource BoolToVisibilityConverter}}"
+                    HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,28,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse x:Name="ProcessingDot" Width="9" Height="9" VerticalAlignment="Center"
+                             Fill="{DynamicResource AccentGoldBrightBrush}" Margin="0,0,10,0">
+                        <Ellipse.Triggers>
+                            <EventTrigger RoutedEvent="Ellipse.Loaded">
+                                <BeginStoryboard Storyboard="{StaticResource ProcessingPulseStoryboard}" />
+                            </EventTrigger>
+                        </Ellipse.Triggers>
+                    </Ellipse>
+                    <TextBlock Text="در حال پردازش..." FontSize="14" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Brand demo-video POPUP — big, full-screen-style overlay, not a
+             small inline swap. Appears once this brand's card has been on
+             screen for ~1 minute (see MainViewModel.IsShowingBrandVideo) and
+             that brand has a video configured (Admin screen). Automatically
+             goes away the moment a new brand is recognised or the card is
+             closed — no manual close button needed. -->
+        <Grid Grid.Row="0" Grid.RowSpan="3" Background="#D9070809"
+              Visibility="{Binding IsShowingBrandVideo, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Border MaxWidth="1500" MaxHeight="900" Margin="60" CornerRadius="24"
+                    Background="#0C0E14" BorderBrush="{DynamicResource AccentGoldBrush}" BorderThickness="1.5"
+                    ClipToBounds="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="90" ShadowDepth="0" Opacity="0.5" Color="#D9B25C" />
+                </Border.Effect>
+                <Grid>
+                    <MediaElement x:Name="BrandVideoElement" Stretch="Uniform"
+                                  LoadedBehavior="Manual" UnloadedBehavior="Manual"
+                                  MediaEnded="BrandVideoElement_MediaEnded"
+                                  MediaFailed="BrandVideoElement_MediaFailed" />
+
+                    <!-- Brand name label, top-left of the popup, so it's
+                         clear which product this demo belongs to. -->
+                    <Border VerticalAlignment="Top" HorizontalAlignment="Right" Margin="24"
+                            Background="#C0000000" CornerRadius="14" Padding="16,9">
+                        <TextBlock Text="{Binding CurrentBrand.NameFa}" FontSize="16" FontWeight="Bold"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" />
+                    </Border>
+                </Grid>
+            </Border>
         </Grid>
 
         <!-- Footer -->

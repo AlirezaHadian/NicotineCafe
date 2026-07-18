@@ -32,6 +32,7 @@ public partial class AdminViewModel : ObservableObject
     private string _formNameFa = string.Empty;
     [ObservableProperty] private string _formNameEn = string.Empty;
     [ObservableProperty] private string _formImagePath = string.Empty;
+    [ObservableProperty] private string _formVideoPath = string.Empty;
 
     [ObservableProperty] private string _newAliasText = string.Empty;
     [ObservableProperty] private string _newModelText = string.Empty;
@@ -83,12 +84,14 @@ public partial class AdminViewModel : ObservableObject
             FormNameFa = string.Empty;
             FormNameEn = string.Empty;
             FormImagePath = string.Empty;
+            FormVideoPath = string.Empty;
             return;
         }
 
         FormNameFa = value.NameFa;
         FormNameEn = value.NameEn;
         FormImagePath = value.ImagePath ?? string.Empty;
+        FormVideoPath = value.VideoPath ?? string.Empty;
 
         _ = LoadAliasesAndModelsAsync(value.Id);
     }
@@ -118,6 +121,7 @@ public partial class AdminViewModel : ObservableObject
         FormNameFa = string.Empty;
         FormNameEn = string.Empty;
         FormImagePath = string.Empty;
+        FormVideoPath = string.Empty;
         SelectedBrandAliases.Clear();
         SelectedBrandModels.Clear();
         StatusMessage = string.Empty;
@@ -157,6 +161,45 @@ public partial class AdminViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Opens a file picker and copies the chosen video into
+    /// Assets/Videos next to the exe (same pattern as BrowseForImage) —
+    /// works immediately without a rebuild. Sets FormVideoPath to the
+    /// resulting relative path. This is the per-brand demo video shown
+    /// (looped) once a customer has had the brand card on screen for
+    /// about a minute.
+    /// </summary>
+    [RelayCommand]
+    private void BrowseForVideo()
+    {
+        var dialog = new OpenFileDialog
+        {
+            Title = "انتخاب ویدیوی دمو برند",
+            Filter = "ویدیو (*.mp4;*.wmv;*.avi;*.mov)|*.mp4;*.wmv;*.avi;*.mov|همه‌ی فایل‌ها|*.*",
+        };
+        if (dialog.ShowDialog() != true) return;
+
+        try
+        {
+            var videosDir = Path.Combine(AppContext.BaseDirectory, "Assets", "Videos");
+            Directory.CreateDirectory(videosDir);
+
+            var fileName = Path.GetFileName(dialog.FileName);
+            var destPath = Path.Combine(videosDir, fileName);
+            File.Copy(dialog.FileName, destPath, overwrite: true);
+
+            FormVideoPath = $"Videos/{fileName}";
+            StatusMessage = $"ویدیو کپی شد: {fileName}";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"خطا در کپی‌کردن ویدیو: {ex.Message}";
+        }
+    }
+
+    [RelayCommand]
+    private void ClearVideo() => FormVideoPath = string.Empty;
+
     private bool CanSave() => !string.IsNullOrWhiteSpace(FormNameFa);
 
     [RelayCommand(CanExecute = nameof(CanSave))]
@@ -167,6 +210,7 @@ public partial class AdminViewModel : ObservableObject
             NameFa = FormNameFa.Trim(),
             NameEn = FormNameEn.Trim(),
             ImagePath = string.IsNullOrWhiteSpace(FormImagePath) ? null : FormImagePath.Trim(),
+            VideoPath = string.IsNullOrWhiteSpace(FormVideoPath) ? null : FormVideoPath.Trim(),
         };
         var id = await _brandService.AddBrandAsync(brand);
         StatusMessage = $"«{brand.NameFa}» اضافه شد — حالا الیاس و مدل‌هاش رو اضافه کن.";
@@ -184,6 +228,7 @@ public partial class AdminViewModel : ObservableObject
             NameFa = FormNameFa.Trim(),
             NameEn = FormNameEn.Trim(),
             ImagePath = string.IsNullOrWhiteSpace(FormImagePath) ? null : FormImagePath.Trim(),
+            VideoPath = string.IsNullOrWhiteSpace(FormVideoPath) ? null : FormVideoPath.Trim(),
             IsActive = true,
         };
         await _brandService.UpdateBrandAsync(updated);

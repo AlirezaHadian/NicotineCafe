@@ -51,6 +51,7 @@
                     <DataGridTextColumn Header="نام فارسی" Binding="{Binding NameFa}" Width="*" />
                     <DataGridTextColumn Header="نام انگلیسی" Binding="{Binding NameEn}" Width="*" />
                     <DataGridTextColumn Header="عکس" Binding="{Binding ImagePath}" Width="*" />
+                    <DataGridTextColumn Header="ویدیو" Binding="{Binding VideoPath}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
@@ -80,6 +81,22 @@
                         </Grid.ColumnDefinitions>
                         <TextBox Grid.Column="0" Text="{Binding FormImagePath}" FlowDirection="LeftToRight" IsReadOnly="True" />
                         <Button Grid.Column="2" Content="انتخاب فایل..." Command="{Binding BrowseForImageCommand}" Padding="16,8" />
+                    </Grid>
+
+                    <TextBlock Text="ویدیوی دمو برند (اختیاری — بعد از ۱ دقیقه به‌صورت لوپ پخش می‌شه)"
+                               Style="{StaticResource SpecLabelStyle}" Margin="0,0,0,4" TextWrapping="Wrap" />
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{Binding FormVideoPath}" FlowDirection="LeftToRight" IsReadOnly="True" />
+                        <Button Grid.Column="2" Content="انتخاب فایل..." Command="{Binding BrowseForVideoCommand}" Padding="16,8" />
+                        <Button Grid.Column="4" Content="حذف" Command="{Binding ClearVideoCommand}" Padding="16,8"
+                                Background="{DynamicResource AccentEmberBrush}" />
                     </Grid>
 
                     <UniformGrid Columns="2" Rows="1">

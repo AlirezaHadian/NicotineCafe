@@ -7,6 +7,7 @@ public sealed class Brand
     public string NameFa { get; set; } = string.Empty;
     public string NameEn { get; set; } = string.Empty;
     public string? ImagePath { get; set; }
+    public string? VideoPath { get; set; } // optional demo video, looped after 1 min on the display card
     public bool IsActive { get; set; } = true;
 }
 

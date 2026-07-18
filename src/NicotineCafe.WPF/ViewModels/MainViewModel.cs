@@ -18,11 +18,13 @@ namespace NicotineCafe.WPF.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
     private static readonly TimeSpan DisplayDuration = TimeSpan.FromMinutes(5);
+    private static readonly TimeSpan BrandVideoDelay = TimeSpan.FromMinutes(1);
 
     private readonly IBrandService _brandService;
     private readonly ISpeechEngineClient _speechClient;
     private readonly IEngineSettingsRepository _settingsRepository;
     private readonly DispatcherTimer _hideTimer;
+    private readonly DispatcherTimer _brandVideoTimer;
 
     [ObservableProperty] private BrandDisplay? _currentBrand;
     [ObservableProperty] private bool _isProductVisible;
@@ -31,6 +33,23 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool _showModelList = true; // from EngineSettings("show_model_list"), operator-toggleable
     [ObservableProperty] private double _audioLevel; // 0.0–1.0, bound to the equalizer/orb visual
     [ObservableProperty] private string _statusText = "در حال اتصال به موتور تشخیص...";
+
+    /// <summary>
+    /// True while the engine is actively transcribing/matching an utterance.
+    /// Shown as a small overlay pill regardless of whether the idle screen
+    /// or a brand card is currently on screen (previously the "processing"
+    /// status only reached the idle screen's status text, so it was
+    /// invisible whenever a brand card was up).
+    /// </summary>
+    [ObservableProperty] private bool _isProcessing;
+
+    /// <summary>
+    /// True once the CURRENT brand card has been on screen for about a
+    /// minute AND that brand has its own demo video configured (Admin ->
+    /// per-brand "ویدیوی دمو"). The image is then swapped for that video,
+    /// looping, until a new brand is recognised or the card is closed.
+    /// </summary>
+    [ObservableProperty] private bool _isShowingBrandVideo;
 
     public MainViewModel(IBrandService brandService, ISpeechEngineClient speechClient,
         IEngineSettingsRepository settingsRepository)
@@ -41,6 +60,14 @@ public partial class MainViewModel : ObservableObject
 
         _hideTimer = new DispatcherTimer { Interval = DisplayDuration };
         _hideTimer.Tick += (_, _) => HideProduct();
+
+        _brandVideoTimer = new DispatcherTimer { Interval = BrandVideoDelay };
+        _brandVideoTimer.Tick += (_, _) =>
+        {
+            _brandVideoTimer.Stop();
+            if (!string.IsNullOrWhiteSpace(CurrentBrand?.VideoPath))
+                IsShowingBrandVideo = true;
+        };
 
         _speechClient.BrandRecognized += OnBrandRecognized;
         _speechClient.AudioLevelChanged += (_, level) => AudioLevel = level;
@@ -81,10 +108,13 @@ public partial class MainViewModel : ObservableObject
                 "resumed" => "در انتظار مشتری...",
                 _ => StatusText,
             };
+            IsProcessing = msg.Message == "processing";
             if (msg.Message == "paused") IsPaused = true;
             if (msg.Message == "resumed") IsPaused = false;
             return;
         }
+
+        IsProcessing = false;
 
         if (!msg.IsValid || msg.BrandId is null)
         {
@@ -96,7 +126,7 @@ public partial class MainViewModel : ObservableObject
         if (brandDisplay is null) return;
 
         // Rule: a NEW recognised brand always replaces whatever is showing,
-        // and resets the 5-minute window.
+        // and resets the 5-minute window (and the per-brand video timer).
         App.Current.Dispatcher.Invoke(() => ShowBrand(brandDisplay));
     }
 
@@ -104,9 +134,13 @@ public partial class MainViewModel : ObservableObject
     {
         CurrentBrand = brand;
         IsProductVisible = true;
+        IsShowingBrandVideo = false;
 
         _hideTimer.Stop();
         _hideTimer.Start();
+
+        _brandVideoTimer.Stop();
+        _brandVideoTimer.Start();
     }
 
     [RelayCommand]
@@ -124,7 +158,9 @@ public partial class MainViewModel : ObservableObject
     private void HideProduct()
     {
         _hideTimer.Stop();
+        _brandVideoTimer.Stop();
         IsProductVisible = false;
+        IsShowingBrandVideo = false;
         CurrentBrand = null;
         StatusText = "در انتظار مشتری...";
     }
