@@ -15,19 +15,22 @@ ALL_MODEL_SIZES: list[ModelSize] = ["tiny", "base", "small", "medium", "large-v2
 @dataclass
 class WhisperConfig:
     """Settings passed directly to faster-whisper."""
-    model_size: ModelSize = "medium"  # accuracy-first (per explicit request — speed is not
-                                      # a priority right now). NOTE: this default is only used
-                                      # when the EngineSettings table has no 'model_size' row;
-                                      # in practice the DB row always wins (see EngineSettings
-                                      # loading in server.py) — change it from the Admin screen,
-                                      # not here, if it needs to change later.
+    model_size: ModelSize = "small"   # dialed back from "medium" — on the operator's
+                                      # hardware, medium+beam4 took 22-27s per utterance,
+                                      # way past the ~7-8s budget. "small" is the best
+                                      # accuracy/latency compromise found so far; NOTE this
+                                      # default is only used when the EngineSettings table has
+                                      # no 'model_size' row — the DB row always wins in practice.
     language: str = "fa"
-    beam_size: int = 8      # higher beam = better accuracy for a real but bounded speed
-                            # cost. Also overridable at runtime via EngineSettings.
+    beam_size: int = 3      # lower beam to help hit the ~7-8s latency budget with "small"
     best_of: int = 1       # only affects temperature>0 sampling — unused while temperature=0.0
     condition_on_previous_text: bool = False
     temperature: float = 0.0
     compute_type: str = "int8"
+    download_root: str | None = None  # pinned to Data/models next to the shared db in
+                                       # server.py's serve mode — see VoiceEngineServer.__init__.
+                                       # None here just means "let faster-whisper use its own
+                                       # default cache location" (used by the CLI mic/file modes).
 
     # --- Hallucination / silence guards ---
     no_speech_threshold: float = 0.6

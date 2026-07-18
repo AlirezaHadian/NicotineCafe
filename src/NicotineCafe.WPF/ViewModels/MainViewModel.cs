@@ -51,6 +51,15 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     [ObservableProperty] private bool _isShowingBrandVideo;
 
+    /// <summary>
+    /// True from the moment the WPF app connects until the engine finishes
+    /// loading (and, on a first run on this machine, downloading) the
+    /// Whisper model — this can take anywhere from a few seconds to a few
+    /// minutes. Drives an explicit "please wait, setting up" progress UI so
+    /// this doesn't look like the app is just frozen/broken.
+    /// </summary>
+    [ObservableProperty] private bool _isLoadingModel;
+
     public MainViewModel(IBrandService brandService, ISpeechEngineClient speechClient,
         IEngineSettingsRepository settingsRepository)
     {
@@ -102,6 +111,7 @@ public partial class MainViewModel : ObservableObject
             StatusText = msg.Message switch
             {
                 "engine_ready" => "در انتظار مشتری...",
+                "loading_model" => "در حال آماده‌سازی موتور تشخیص صدا... (بار اول ممکنه چند دقیقه طول بکشه)",
                 "processing" => "در حال پردازش...",
                 "no_speech_detected" => "متوجه نشدم — دوباره بفرمایید",
                 "paused" => "موقتاً متوقف شد",
@@ -109,6 +119,7 @@ public partial class MainViewModel : ObservableObject
                 _ => StatusText,
             };
             IsProcessing = msg.Message == "processing";
+            IsLoadingModel = msg.Message == "loading_model";
             if (msg.Message == "paused") IsPaused = true;
             if (msg.Message == "resumed") IsPaused = false;
             return;

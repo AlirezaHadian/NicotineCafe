@@ -76,6 +76,17 @@ class VoiceEngineServer:
         if "min_confidence" in settings:
             self.config.matcher.min_confidence = float(settings["min_confidence"])
 
+        # Pin the faster-whisper model cache to Data/models, next to the
+        # shared db, instead of the OS/user-profile default cache location.
+        # This guarantees the model is only ever downloaded once per
+        # machine/install and reused on every subsequent run, regardless of
+        # which Windows user account launches the app or how that profile's
+        # cache is configured — this is what was causing it to look like it
+        # re-downloads "every time".
+        models_dir = db_path.parent / "models"
+        models_dir.mkdir(parents=True, exist_ok=True)
+        self.config.whisper.download_root = str(models_dir)
+
         log(f"[VoiceEngineServer] Loading brand catalog from {db_path} ...")
         self.matcher = ProductMatcher.from_sqlite(db_path, self.config)
         log(f"[VoiceEngineServer] Catalog loaded: {len(self.matcher.available_brands)} brands.")
@@ -198,16 +209,12 @@ class VoiceEngineServer:
     # ------------------------------------------------------------------
 
     def run(self) -> None:
-        log("[VoiceEngineServer] Loading Whisper model (first run downloads it — needs internet once) ...")
-        load_time = self.engine.load()
-        log(f"[VoiceEngineServer] Whisper model loaded in {load_time:.2f}s.")
-
-        # Start listening immediately — doesn't wait for a WPF connection,
-        # so recognition begins the instant a customer speaks even if the
-        # UI reconnects later.
-        self.recorder.start()
-        log("[VoiceEngineServer] Microphone is now listening continuously (VAD auto-trigger).")
-
+        # Bind/listen FIRST — the WPF client can connect right away (it
+        # retries on a short interval) instead of waiting for the model to
+        # finish loading/downloading before the socket even exists. This is
+        # what lets the WPF side show a real "loading" state instead of
+        # just looking disconnected/frozen for however long the model load
+        # takes (which can be minutes on a first run that has to download).
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as listener:
             listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             try:
@@ -221,11 +228,24 @@ class VoiceEngineServer:
             listener.listen(1)
             log(f"[VoiceEngineServer] listening on 127.0.0.1:{self.port}")
 
+            model_ready = False
+
             while True:
                 conn, _addr = listener.accept()
                 with self._conn_lock:
                     self._conn = conn
                 log("[VoiceEngineServer] WPF client connected")
+
+                if not model_ready:
+                    self._send_status("loading_model")
+                    log("[VoiceEngineServer] Loading Whisper model (first run downloads it — needs internet once) ...")
+                    load_time = self.engine.load()
+                    log(f"[VoiceEngineServer] Whisper model loaded in {load_time:.2f}s.")
+
+                    self.recorder.start()
+                    log("[VoiceEngineServer] Microphone is now listening continuously (VAD auto-trigger).")
+                    model_ready = True
+
                 self._send_status("engine_ready")
 
                 try:
@@ -251,7 +271,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Nicotine Cafe voice engine — TCP bridge server")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--db", required=True, help="Path to the shared nicotinecafe.db")
-    parser.add_argument("--model", default="tiny", choices=["tiny", "base", "small"])
+    parser.add_argument("--model", default="tiny", choices=["tiny", "base", "small", "medium", "large-v2", "large-v3"])
     args = parser.parse_args()
 
     try:

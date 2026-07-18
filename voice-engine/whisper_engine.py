@@ -74,6 +74,10 @@ class WhisperEngine:
             cpu_threads=self.cpu_threads,  # NOTE: more threads is NOT always faster for small models —
                             # oversubscription can add scheduling overhead that dominates
                             # the actual compute. Tune this per-machine if needed.
+            download_root=self.config.download_root,  # pinned persistent cache in serve mode —
+                            # see VoiceEngineServer.__init__ — so the model is only ever
+                            # downloaded once per machine, regardless of Windows user
+                            # profile / OS cache quirks.
         )
         self._warm_up()
         self.load_time = time.perf_counter() - t0

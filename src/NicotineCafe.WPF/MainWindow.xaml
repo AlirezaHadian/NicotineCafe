@@ -65,9 +65,22 @@
             <!-- Idle / listening state: orb + status text, no button needed -->
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
                         Visibility="{Binding IsProductVisible, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                <controls:AudioEqualizerControl Level="{Binding AudioLevel}" HorizontalAlignment="Center" />
+                <controls:AudioEqualizerControl Level="{Binding AudioLevel}" HorizontalAlignment="Center"
+                    Visibility="{Binding IsLoadingModel, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
+
+                <!-- Shown only while the engine is loading/downloading the
+                     Whisper model (see MainViewModel.IsLoadingModel) — makes
+                     it clear the app is working, not frozen, during what can
+                     be a multi-minute first-run wait. -->
+                <StackPanel Width="320" HorizontalAlignment="Center"
+                    Visibility="{Binding IsLoadingModel, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <ProgressBar IsIndeterminate="True" Height="6" Width="280"
+                                 Foreground="{DynamicResource AccentGoldBrightBrush}"
+                                 Background="#221C1420" BorderThickness="0" />
+                </StackPanel>
+
                 <TextBlock Text="{Binding StatusText}" Style="{StaticResource StatusTextStyle}"
-                           HorizontalAlignment="Center" Margin="0,28,0,0" />
+                           HorizontalAlignment="Center" Margin="0,28,0,0" TextAlignment="Center" TextWrapping="Wrap" />
             </StackPanel>
 
             <!-- Brand card: recognition is brand-only now — the customer

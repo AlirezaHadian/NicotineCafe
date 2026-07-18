@@ -8,10 +8,12 @@ Transformations applied (in order):
   1. Strip Arabic diacritics (tashkeel) and tatweel
   2. Remove zero-width characters
   3. Arabic letter → Persian letter substitutions
-  4. Lowercase Latin characters
-  5. Remove punctuation (keep Persian letters, Latin letters, digits, spaces)
-  6. Collapse repeated spaces
-  7. Strip surrounding whitespace
+  4. Collapse repeated letters (ASR elongation artifacts, e.g. "کاواللو" -> "کاوالو")
+  5. Persian/Arabic digits → ASCII digits
+  6. Lowercase Latin characters
+  7. Remove punctuation (keep Persian letters, Latin letters, digits, spaces)
+  8. Collapse repeated spaces
+  9. Strip surrounding whitespace
 """
 from __future__ import annotations
 
@@ -58,6 +60,13 @@ _ALLOWED_RE = re.compile(
 )
 
 _MULTI_SPACE_RE = re.compile(r" {2,}")
+
+# 2+ identical consecutive letters -> collapse to 1. Persian native spelling
+# essentially never has legitimately doubled letters (unlike English) — a
+# run like "کاواللو" or "وینستوووم" is always a Whisper elongation artifact,
+# not real spelling. Collapsing this generically means we don't need a
+# manual alias for every possible doubling of every brand name.
+_REPEATED_LETTER_RE = re.compile(r"([\u0600-\u06FF])\1{1,}")
 
 
 # ---------------------------------------------------------------------------
@@ -108,6 +117,10 @@ class PersianNormalizer:
     def _collapse_spaces(text: str) -> str:
         return _MULTI_SPACE_RE.sub(" ", text).strip()
 
+    @staticmethod
+    def _collapse_repeated_letters(text: str) -> str:
+        return _REPEATED_LETTER_RE.sub(r"\1", text)
+
     # ------------------------------------------------------------------
     # Public interface
     # ------------------------------------------------------------------
@@ -131,6 +144,7 @@ class PersianNormalizer:
         text = self._remove_diacritics(text)
         text = self._remove_zwc(text)
         text = self._arabic_to_persian(text)
+        text = self._collapse_repeated_letters(text)
         text = self._normalize_digits(text)
         text = self._lowercase_latin(text)
         text = self._remove_punctuation(text)
