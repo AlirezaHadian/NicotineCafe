@@ -60,6 +60,17 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     [ObservableProperty] private bool _isLoadingModel;
 
+    /// <summary>
+    /// Brief "didn't understand" toast — shown for a few seconds whenever
+    /// the engine heard something but couldn't match it to a brand.
+    /// Visible in EVERY state (idle or a product card already open), unlike
+    /// StatusText which is hidden once a product card is showing.
+    /// </summary>
+    [ObservableProperty] private bool _isShowingError;
+    [ObservableProperty] private string _errorMessage = string.Empty;
+
+    private readonly DispatcherTimer _errorToastTimer;
+
     public MainViewModel(IBrandService brandService, ISpeechEngineClient speechClient,
         IEngineSettingsRepository settingsRepository)
     {
@@ -76,6 +87,13 @@ public partial class MainViewModel : ObservableObject
             _brandVideoTimer.Stop();
             if (!string.IsNullOrWhiteSpace(CurrentBrand?.VideoPath))
                 IsShowingBrandVideo = true;
+        };
+
+        _errorToastTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3.5) };
+        _errorToastTimer.Tick += (_, _) =>
+        {
+            _errorToastTimer.Stop();
+            IsShowingError = false;
         };
 
         _speechClient.BrandRecognized += OnBrandRecognized;
@@ -130,6 +148,7 @@ public partial class MainViewModel : ObservableObject
         if (!msg.IsValid || msg.BrandId is null)
         {
             StatusText = "برند شناسایی نشد — دوباره بفرمایید";
+            App.Current.Dispatcher.Invoke(() => ShowError("متوجه نشدم — لطفاً واضح‌تر بفرمایید"));
             return;
         }
 
@@ -146,12 +165,22 @@ public partial class MainViewModel : ObservableObject
         CurrentBrand = brand;
         IsProductVisible = true;
         IsShowingBrandVideo = false;
+        IsShowingError = false;
+        _errorToastTimer.Stop();
 
         _hideTimer.Stop();
         _hideTimer.Start();
 
         _brandVideoTimer.Stop();
         _brandVideoTimer.Start();
+    }
+
+    private void ShowError(string message)
+    {
+        ErrorMessage = message;
+        IsShowingError = true;
+        _errorToastTimer.Stop();
+        _errorToastTimer.Start();
     }
 
     [RelayCommand]

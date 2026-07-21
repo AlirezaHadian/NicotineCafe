@@ -204,6 +204,17 @@
                                Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
                 </StackPanel>
             </Border>
+            <!-- "Didn't understand" error toast — visible in EVERY state,
+                 auto-hides after ~3.5s (see MainViewModel.ShowError). -->
+            <Border Style="{StaticResource ErrorToastStyle}"
+                    Visibility="{Binding IsShowingError, Converter={StaticResource BoolToVisibilityConverter}}"
+                    HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,48">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="⚠" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <TextBlock Text="{Binding ErrorMessage}" FontSize="14" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
         </Grid>
 
         <!-- Brand demo-video POPUP — big, full-screen-style overlay, not a

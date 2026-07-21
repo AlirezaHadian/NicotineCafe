@@ -1,6 +1,19 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <Style x:Key="ErrorToastStyle" TargetType="Border">
+        <Setter Property="Background" Value="#E5271417" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentEmberBrush}" />
+        <Setter Property="BorderThickness" Value="1.2" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="Padding" Value="20,11" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="28" ShadowDepth="0" Opacity="0.5" Color="#C0392B" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="ProcessingPillStyle" TargetType="Border">
         <Setter Property="Background" Value="#DA1A1D27" />
         <Setter Property="BorderBrush" Value="{DynamicResource AccentGoldBrush}" />

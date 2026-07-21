@@ -35,9 +35,13 @@ public partial class App : Application
         var bundledPython = System.IO.Path.Combine(AppContext.BaseDirectory, "python-embed", "python.exe");
         var pythonExe = System.IO.File.Exists(bundledPython) ? bundledPython : "python";
 
-        // Prefer a bundled, pre-downloaded Whisper model cache (model-cache\)
-        // so the app never needs internet at all, even on first run.
-        var bundledModelCache = System.IO.Path.Combine(AppContext.BaseDirectory, "model-cache");
+        // Prefer a bundled, pre-downloaded Whisper model cache (Data\models\)
+        // so the app never needs internet at all, even on first run. This is
+        // the SAME folder server.py pins its faster-whisper download_root to
+        // (derived from --db's parent directory) — keep both in sync so
+        // there's exactly one place to pre-populate, not two that could
+        // disagree. See the installer guide for how to fill this folder.
+        var bundledModelCache = System.IO.Path.Combine(AppContext.BaseDirectory, "Data", "models");
         var hfHomeDir = System.IO.Directory.Exists(bundledModelCache) ? bundledModelCache : null;
 
         services.AddSingleton(_ => new VoiceEngineProcessLauncher(
